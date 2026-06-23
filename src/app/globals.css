@@ -43,16 +43,16 @@
   .btn-primary {
     @apply font-sans text-[0.6875rem] tracking-[0.16em] uppercase bg-p-black text-p-pure-white 
            py-[14px] px-10 border-none cursor-pointer font-medium 
-           transition-all duration-350 ease-in-out no-underline inline-block text-center;
+           transition-all duration-300 ease-in-out no-underline inline-block text-center;
   }
   .btn-primary:hover {
-    @apply bg-p-gold text-p-black -translate-y-[1px];
+    @apply bg-p-gold text-p-black;
   }
 
   .btn-secondary {
     @apply font-sans text-[0.6875rem] tracking-[0.16em] uppercase bg-transparent text-p-dark-gray 
            py-[14px] px-10 border border-p-light-gray cursor-pointer font-medium 
-           transition-all duration-350 ease-in-out no-underline inline-block text-center;
+           transition-all duration-300 ease-in-out no-underline inline-block text-center;
   }
   .btn-secondary:hover {
     @apply border-p-gold text-p-gold;
@@ -74,7 +74,7 @@
 
   /* ─── Craft Card ─── */
   .craft-card {
-    @apply p-[clamp(32px,4vw,48px)] border border-white/[0.08] transition-border-color duration-400 relative;
+    @apply p-[clamp(32px,4vw,48px)] border border-white/[0.08] transition-all duration-500 relative;
   }
   .craft-card:hover {
     @apply border-p-gold/40;
@@ -98,7 +98,7 @@
   .form-submit {
     @apply font-sans text-[0.6875rem] tracking-[0.16em] uppercase bg-p-black text-p-pure-white 
            py-[14px] px-12 border-none cursor-pointer font-medium w-full mt-2
-           transition-all duration-350 ease-in-out;
+           transition-all duration-300 ease-in-out;
   }
   .form-submit:hover {
     @apply bg-p-gold text-p-black;
