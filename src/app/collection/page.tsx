@@ -77,16 +77,16 @@ export default function CollectionPage() {
       <section className="section bg-p-off-white">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[clamp(20px,3vw,40px)] max-w-[1200px] mx-auto">
           {filtered.map((product) => (
-            <div key={product.id} ref={addRef} className="fade-in group relative overflow-hidden bg-p-pure-white cursor-pointer transition-transform duration-400 hover:-translate-y-1">
+            <div key={product.id} ref={addRef} className="fade-in group relative overflow-hidden bg-p-pure-white cursor-pointer transition-transform duration-300 hover:-translate-y-1">
               <a href={`/collection/${product.id}`} className="no-underline text-p-black">
                 <div className="aspect-[3/4] bg-p-cream flex items-center justify-center overflow-hidden relative">
-                  <svg width="120" height="160" viewBox="0 0 120 160" fill="none" className="transition-transform duration-600 group-hover:scale-[1.05]">
+                  <svg width="120" height="160" viewBox="0 0 120 160" fill="none" className="transition-transform duration-500 group-hover:scale-[1.05]">
                     <rect x="20" y="30" width="80" height="110" rx="8" stroke="#C9A84C" strokeWidth="1" fill="none"/>
                     <path d="M30 30 Q60 5 90 30" stroke="#C9A84C" strokeWidth="1" fill="none"/>
                     <rect x="50" y="50" width="20" height="24" rx="3" stroke="#3A3A3A" strokeWidth="0.5" fill="none"/>
                   </svg>
-                  <div className="absolute inset-0 bg-black/0 flex items-center justify-center transition-[background] duration-400 group-hover:bg-[rgba(10,10,10,0.15)]">
-                    <span className="font-sans text-[0.6875rem] tracking-label uppercase text-white opacity-0 translate-y-2 transition-all duration-400 font-medium py-2.5 px-6 border border-white/60 group-hover:opacity-100 group-hover:translate-y-0">
+                  <div className="absolute inset-0 bg-black/0 flex items-center justify-center transition-[background] duration-300 group-hover:bg-[rgba(10,10,10,0.15)]">
+                    <span className="font-sans text-[0.6875rem] tracking-label uppercase text-white opacity-0 translate-y-2 transition-all duration-300 font-medium py-2.5 px-6 border border-white/60 group-hover:opacity-100 group-hover:translate-y-0">
                       View Details
                     </span>
                   </div>

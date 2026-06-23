@@ -13,7 +13,7 @@ export default function Header() {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-[100] flex items-center justify-between
-      px-[clamp(24px,4vw,80px)] transition-all duration-400 ease
+      px-[clamp(24px,4vw,80px)] transition-all duration-300 ease
       ${scrolled ? 'h-14 bg-white/[0.97] backdrop-blur-xl' : 'h-[72px] bg-white/[0.92] backdrop-blur-[20px]'}
       border-b border-black/[0.06]`}>
       
