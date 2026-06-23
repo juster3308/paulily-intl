@@ -104,7 +104,7 @@ export default function AboutPage() {
               { title: 'Process Transparency', desc: 'Our wholesale partners receive full documentation of every production step — from hide origin to final QC report.' },
               { title: 'Long-term Partnership', desc: '98% repeat order rate speaks for itself. We invest in relationships, not transactions.' },
             ].map((v, i) => (
-              <div key={i} className="p-8 border border-p-light-gray bg-p-pure-white hover:border-p-gold/40 transition-border-color duration-300">
+              <div key={i} className="p-8 border border-p-light-gray bg-p-pure-white hover:border-p-gold/40 transition-colors duration-300">
                 <div className="font-serif text-[1.75rem] font-normal text-p-gold opacity-40 mb-4">{String(i+1).padStart(2, '0')}</div>
                 <h3 className="font-serif text-[1.125rem] font-medium mb-3">{v.title}</h3>
                 <p className="font-accent text-sm font-light italic text-p-mid-gray leading-[1.8]">{v.desc}</p>
