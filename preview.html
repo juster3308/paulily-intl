@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAULILY — Crafted for the Discerning</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════
+     PAULILY INTERNATIONAL — B2B SHOWCASE
+     Design DNA: Refined · Substantial · Quiet Luxury
+     ═══════════════════════════════════════════ */
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0A0A0A;
+    --off-black: #1A1A1A;
+    --dark-gray: #3A3A3A;
+    --mid-gray: #6B6B6B;
+    --silver: #9A9A9A;
+    --light-gray: #D4D4D4;
+    --off-white: #F5F5F0;
+    --warm-white: #FAF8F5;
+    --pure-white: #FFFFFF;
+    --gold: #C9A84C;
+    --gold-light: #D4BA6A;
+    --cream: #EDE8E0;
+    --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Inter', -apple-system, Helvetica Neue, sans-serif;
+    --font-accent: 'Cormorant Garamond', 'Playfair Display', serif;
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: var(--font-sans);
+    color: var(--black);
+    background: var(--pure-white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ─── Typography ─── */
+  .font-serif { font-family: var(--font-serif); }
+  .font-accent { font-family: var(--font-accent); }
+  .font-sans { font-family: var(--font-sans); }
+
+  h1, h2, h3 { font-family: var(--font-serif); letter-spacing: -0.02em; }
+  h1 { font-weight: 500; }
+  h2 { font-weight: 400; }
+  h3 { font-weight: 500; }
+
+  .text-gold { color: var(--gold); }
+  .text-mid { color: var(--mid-gray); }
+  .text-silver { color: var(--silver); }
+
+  .label {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid-gray);
+    font-weight: 500;
+  }
+
+  .divider {
+    width: 40px; height: 1px;
+    background: var(--gold);
+    display: inline-block;
+  }
+
+  .divider-wide {
+    width: 60px; height: 1px;
+    background: var(--light-gray);
+  }
+
+  /* ─── Navigation ─── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 72px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(24px, 4vw, 80px);
+    transition: all 0.4s ease;
+  }
+
+  .nav.scrolled {
+    height: 56px;
+    background: rgba(255,255,255,0.97);
+  }
+
+  .nav-logo {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    letter-spacing: 0.35em;
+    font-weight: 500;
+    color: var(--black);
+    text-decoration: none;
+    transition: letter-spacing 0.3s ease;
+  }
+  .nav-logo:hover { letter-spacing: 0.42em; }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    align-items: center;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dark-gray);
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 2px;
+    transition: color 0.3s ease;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--black); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--black);
+    color: var(--pure-white);
+    padding: 10px 24px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--warm-white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 49px, var(--black) 49px, var(--black) 50px),
+      repeating-linear-gradient(90deg, transparent, transparent 49px, var(--black) 49px, var(--black) 50px);
+  }
+
+  .hero-content {
+    text-align: center;
+    max-width: 800px;
+    padding: 0 24px;
+    position: relative;
+  }
+
+  .hero-label {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    font-weight: 500;
+  }
+
+  .hero-title {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--black);
+    margin-bottom: 32px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    font-family: var(--font-accent);
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-family: var(--font-accent);
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--mid-gray);
+    max-width: 520px;
+    margin: 0 auto 48px;
+    font-style: italic;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn-primary {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: var(--black);
+    color: var(--pure-white);
+    padding: 14px 40px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.35s ease;
+    text-decoration: none;
+  }
+  .btn-primary:hover {
+    background: var(--gold);
+    color: var(--black);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--dark-gray);
+    padding: 14px 40px;
+    border: 1px solid var(--light-gray);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.35s ease;
+    text-decoration: none;
+  }
+  .btn-secondary:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .hero-scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--silver);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-family: var(--font-sans);
+  }
+  .hero-scroll-indicator .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--silver), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* ─── Featured Collection ─── */
+  .section {
+    padding: clamp(80px, 10vw, 140px) clamp(24px, 4vw, 80px);
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto clamp(48px, 6vw, 80px);
+  }
+
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+
+  .section-desc {
+    font-family: var(--font-accent);
+    font-size: 1.125rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--mid-gray);
+    line-height: 1.7;
+  }
+
+  .collection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(20px, 3vw, 40px);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .product-card {
+    position: relative;
+    overflow: hidden;
+    background: var(--off-white);
+    cursor: pointer;
+    group: true;
+    transition: transform 0.4s ease;
+  }
+  .product-card:hover { transform: translateY(-4px); }
+
+  .product-card-image {
+    aspect-ratio: 3/4;
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .product-card-image .placeholder-img {
+    width: 70%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-card-image svg {
+    transition: transform 0.6s ease;
+  }
+  .product-card:hover .product-card-image svg {
+    transform: scale(1.05);
+  }
+
+  .product-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.4s ease;
+  }
+  .product-card:hover .product-card-overlay {
+    background: rgba(10,10,10,0.15);
+  }
+
+  .product-card-overlay-text {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--pure-white);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.4s ease;
+    font-weight: 500;
+    padding: 10px 24px;
+    border: 1px solid rgba(255,255,255,0.6);
+  }
+  .product-card:hover .product-card-overlay-text {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .product-card-info {
+    padding: 20px 20px 24px;
+  }
+
+  .product-card-series {
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .product-card-name {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+
+  .product-card-price {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--mid-gray);
+    font-weight: 400;
+  }
+
+  .product-card-material {
+    font-family: var(--font-accent);
+    font-size: 0.75rem;
+    color: var(--silver);
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  /* ─── Craftsmanship ─── */
+  .craft-section {
+    background: var(--black);
+    color: var(--pure-white);
+    position: relative;
+  }
+
+  .craft-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(24px, 3vw, 48px);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .craft-card {
+    padding: clamp(32px, 4vw, 48px) clamp(24px, 3vw, 36px);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: border-color 0.4s ease;
+    position: relative;
+  }
+  .craft-card:hover { border-color: rgba(201,168,76,0.4); }
+
+  .craft-card-number {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: var(--gold);
+    opacity: 0.4;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .craft-card-title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+    letter-spacing: 0.04em;
+  }
+
+  .craft-card-desc {
+    font-family: var(--font-accent);
+    font-size: 0.9375rem;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.8;
+  }
+
+  /* ─── Heritage ─── */
+  .heritage-section {
+    background: var(--warm-white);
+  }
+
+  .heritage-layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+  }
+
+  .heritage-image-area {
+    aspect-ratio: 4/5;
+    background: var(--cream);
+    border: 1px solid var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .heritage-image-area::before {
+    content: '';
+    position: absolute;
+    top: 20px; left: 20px; right: 20px; bottom: 20px;
+    border: 1px solid var(--gold);
+    opacity: 0.2;
+  }
+
+  .heritage-text .label { margin-bottom: 20px; display: block; }
+  .heritage-text h2 {
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    margin-bottom: 24px;
+    font-weight: 400;
+    line-height: 1.15;
+  }
+  .heritage-text p {
+    font-family: var(--font-accent);
+    font-size: 1.0625rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--mid-gray);
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .heritage-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--light-gray);
+  }
+
+  .heritage-stat-number {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .heritage-stat-label {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--silver);
+    font-weight: 500;
+  }
+
+  /* ─── Wholesale Inquiry ─── */
+  .inquiry-section {
+    background: var(--off-white);
+  }
+
+  .inquiry-layout {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: start;
+  }
+
+  .inquiry-info .label { margin-bottom: 20px; display: block; }
+  .inquiry-info h2 {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    margin-bottom: 20px;
+    font-weight: 400;
+  }
+  .inquiry-info p {
+    font-family: var(--font-accent);
+    font-size: 1rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--mid-gray);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .inquiry-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--dark-gray);
+  }
+
+  .inquiry-contact-icon {
+    width: 32px; height: 32px;
+    border: 1px solid var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--gold);
+  }
+
+  .inquiry-form {
+    background: var(--pure-white);
+    padding: clamp(32px, 4vw, 48px);
+    border: 1px solid var(--light-gray);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mid-gray);
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--light-gray);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--black);
+    background: var(--pure-white);
+    transition: border-color 0.3s ease;
+    outline: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--gold);
+  }
+
+  .form-textarea { min-height: 120px; resize: vertical; }
+
+  .form-submit {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: var(--black);
+    color: var(--pure-white);
+    padding: 14px 48px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.35s ease;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .form-submit:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  /* ─── Footer ─── */
+  .footer {
+    background: var(--black);
+    color: rgba(255,255,255,0.7);
+    padding: clamp(48px, 6vw, 80px) clamp(24px, 4vw, 80px);
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .footer-brand-name {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    letter-spacing: 0.3em;
+    font-weight: 500;
+    color: var(--pure-white);
+    margin-bottom: 16px;
+  }
+
+  .footer-brand-desc {
+    font-family: var(--font-accent);
+    font-size: 0.875rem;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+    max-width: 280px;
+  }
+
+  .footer-col-title {
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .footer-col-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-col-links a {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .footer-col-links a:hover { color: var(--gold); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 32px;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 16px;
+  }
+
+  .footer-social a {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .footer-social a:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 1024px) {
+    .collection-grid { grid-template-columns: repeat(2, 1fr); }
+    .craft-grid { grid-template-columns: repeat(2, 1fr); }
+    .heritage-layout { grid-template-columns: 1fr; }
+    .inquiry-layout { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .collection-grid { grid-template-columns: 1fr; }
+    .craft-grid { grid-template-columns: 1fr; }
+    .heritage-stats { grid-template-columns: repeat(2, 1fr); }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+    .hero-actions { flex-direction: column; }
+  }
+
+  /* ─── Animations ─── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── Catalog PDF banner ─── */
+  .catalog-banner {
+    background: var(--cream);
+    padding: clamp(40px, 5vw, 64px) clamp(24px, 4vw, 80px);
+    text-align: center;
+  }
+  .catalog-banner h3 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .catalog-banner p {
+    font-family: var(--font-accent);
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--mid-gray);
+    margin-bottom: 24px;
+  }
+
+  /* ─── MOBILE MENU ─── */
+  .mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: var(--black);
+  }
+  @media (max-width: 640px) {
+    .mobile-menu-btn { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ NAVIGATION ══════════ -->
+<nav class="nav" id="mainNav">
+  <a href="#" class="nav-logo">P A U L I L Y</a>
+  <ul class="nav-links">
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#craftsmanship">Craftsmanship</a></li>
+    <li><a href="#heritage">Heritage</a></li>
+    <li><a href="#inquiry">Wholesale</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('inquiry').scrollIntoView({behavior:'smooth'})">Request Catalog</button>
+  <button class="mobile-menu-btn" id="mobileMenuBtn">
+    <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><rect y="0" width="20" height="1.5" fill="#0A0A0A"/><rect y="6" width="20" height="1.5" fill="#0A0A0A"/><rect y="12" width="20" height="1.5" fill="#0A0A0A"/></svg>
+  </button>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-content fade-in">
+    <span class="hero-label">Established · Shanghai</span>
+    <h1 class="hero-title">Crafted for<br>the <em>Discerning</em></h1>
+    <p class="hero-sub">Where Eastern artistry meets uncompromising quality. Each piece is a dialogue between heritage and modernity — made for those who recognize excellence without explanation.</p>
+    <div class="hero-actions">
+      <a href="#collection" class="btn-primary">View Collection</a>
+      <a href="#inquiry" class="btn-secondary">Wholesale Inquiry</a>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══════════ COLLECTION ══════════ -->
+<section class="section" id="collection">
+  <div class="section-header fade-in">
+    <span class="label">The Collection</span>
+    <div class="divider" style="margin: 16px auto;"></div>
+    <h2 class="section-title">Quiet Precision</h2>
+    <p class="section-desc">Six signature silhouettes — each defined by restraint, structure, and the quiet confidence of exceptional material.</p>
+  </div>
+
+  <div class="collection-grid">
+    <!-- Product 1 -->
+    <div class="product-card fade-in">
+      <div class="product-card-image">
+        <div class="placeholder-img">
+          <svg width="120" height="160" viewBox="0 0 120 160" fill="none">
+            <rect x="20" y="30" width="80" height="110" rx="8" stroke="#C9A84C" stroke-width="1" fill="none"/>
+            <path d="M30 30 Q60 5 90 30" stroke="#C9A84C" stroke-width="1" fill="none"/>
+            <rect x="50" y="50" width="20" height="24" rx="3" stroke="#3A3A3A" stroke-width="0.5" fill="none"/>
+            <line x1="60" y1="55" x2="60" y2="68" stroke="#9A9A9A" stroke-width="0.5"/>
+          </svg>
+        </div>
+        <div class="product-card-overlay">
+          <span class="product-card-overlay-text">View Details</span>
+        </div>
+      </div>
+      <div class="product-card-info">
+        <span class="product-card-series">墨龙 · INK DRAGON</span>
+        <h3 class="product-card-name">The Sovereign</h3>
+        <p class="product-card-price">From ¥3,800 / Unit</p>
+        <p class="product-card-material">Full-grain leather · Brass hardware</p>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card fade-in">
+      <div class="product-card-image">
+        <div class="placeholder-img">
+          <svg width="120" height="160" viewBox="0 0 120 160" fill="none">
+            <rect x="25" y="35" width="70" height="100" rx="6" stroke="#9A9A9A" stroke-width="1" fill="none"/>
+            <path d="M35 35 Q60 10 85 35" stroke="#9A9A9A" stroke-width="1" fill="none"/>
+            <circle cx="60" cy="70" r="8" stroke="#3A3A3A" stroke-width="0.5" fill="none"/>
+            <line x1="52" y1="70" x2="68" y2="70" stroke="#9A9A9A" stroke-width="0.5"/>
+          </svg>
+        </div>
+        <div class="product-card-overlay">
+          <span class="product-card-overlay-text">View Details</span>
+        </div>
+      </div>
+      <div class="product-card-info">
+        <span class="product-card-series">SHADOW</span>
+        <h3 class="product-card-name">The Phantom</h3>
+        <p class="product-card-price">From ¥2,600 / Unit</p>
+        <p class="product-card-material">Matte calfskin · Titanium clasp</p>
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card fade-in">
+      <div class="product-card-image">
+        <div class="placeholder-img">
+          <svg width="120" height="160" viewBox="0 0 120 160" fill="none">
+            <path d="M20 50 L60 30 L100 50 L100 130 Q60 150 20 130 Z" stroke="#C9A84C" stroke-width="1" fill="none"/>
+            <line x1="60" y1="30" x2="60" y2="50" stroke="#9A9A9A" stroke-width="0.5"/>
+            <rect x="42" y="70" width="36" height="28" rx="3" stroke="#3A3A3A" stroke-width="0.5" fill="none"/>
+          </svg>
+        </div>
+        <div class="product-card-overlay">
+          <span class="product-card-overlay-text">View Details</span>
+        </div>
+      </div>
+      <div class="product-card-info">
+        <span class="product-card-series">LONELY WALKER</span>
+        <h3 class="product-card-name">The Wanderer</h3>
+        <p class="product-card-price">From ¥4,200 / Unit</p>
+        <p class="product-card-material">Waxed canvas · PVD-coated steel</p>
+      </div>
+    </div>
+
+    <!-- Product 4 -->
+    <div class="product-card fade-in">
+      <div class="product-card-image">
+        <div class="placeholder-img">
+          <svg width="120" height="160" viewBox="0 0 120 160" fill="none">
+            <rect x="20" y="40" width="80" height="100" rx="4" stroke="#6B6B6B" stroke-width="1" fill="none"/>
+            <path d="M40 40 Q60 15 80 40" stroke="#6B6B6B" stroke-width="1" fill="none"/>
+            <path d="M30 80 L90 80" stroke="#3A3A3A" stroke-width="0.5"/>
+            <rect x="35" y="85" width="50" height="30" rx="2" stroke="#9A9A9A" stroke-width="0.5" fill="none"/>
+          </svg>
+        </div>
+        <div class="product-card-overlay">
+          <span class="product-card-overlay-text">View Details</span>
+        </div>
+      </div>
+      <div class="product-card-info">
+        <span class="product-card-series">GOTHIC</span>
+        <h3 class="product-card-name">The Cathedral</h3>
+        <p class="product-card-price">From ¥5,600 / Unit</p>
+        <p class="product-card-material">Patent leather · Gothic arch hardware</p>
+      </div>
+    </div>
+
+    <!-- Product 5 -->
+    <div class="product-card fade-in">
+      <div class="product-card-image">
+        <div class="placeholder-img">
+          <svg width="120" height="160" viewBox="0 0 120 160" fill="none">
+            <ellipse cx="60" cy="80" rx="40" ry="55" stroke="#C9A84C" stroke-width="1" fill="none"/>
+            <path d="M30 55 Q60 25 90 55" stroke="#C9A84C" stroke-width="1" fill="none"/>
+            <circle cx="60" cy="70" r="6" stroke="#3A3A3A" stroke-width="0.5" fill="none"/>
+            <path d="M54 70 L66 70" stroke="#9A9A9A" stroke-width="0.5"/>
+          </svg>
+        </div>
+        <div class="product-card-overlay">
+          <span class="product-card-overlay-text">View Details</span>
+        </div>
+      </div>
+      <div class="product-card-info">
+        <span class="product-card-series">SHADOW</span>
+        <h3 class="product-card-name">The Crescent</h3>
+        <p class="product-card-price">From ¥2,200 / Unit</p>
+        <p class="product-card-material">Nappa lambskin · Hidden magnetic clasp</p>
+      </div>
+    </div>
+
+    <!-- Product 6 -->
+    <div class="product-card fade-in">
+      <div class="product-card-image">
+        <div class="placeholder-img">
+          <svg width="120" height="160" viewBox="0 0 120 160" fill="none">
+            <rect x="15" y="45" width="90" height="95" rx="12" stroke="#3A3A3A" stroke-width="1" fill="none"/>
+            <path d="M25 45 L25 25 M95 45 L95 25" stroke="#9A9A9A" stroke-width="0.8"/>
+            <path d="M25 25 Q60 5 95 25" stroke="#9A9A9A" stroke-width="0.8" fill="none"/>
+            <rect x="40" y="65" width="40" height="30" rx="4" stroke="#C9A84C" stroke-width="0.5" fill="none"/>
+          </svg>
+        </div>
+        <div class="product-card-overlay">
+          <span class="product-card-overlay-text">View Details</span>
+        </div>
+      </div>
+      <div class="product-card-info">
+        <span class="product-card-series">墨龙 · INK DRAGON</span>
+        <h3 class="product-card-name">The Citadel</h3>
+        <p class="product-card-price">From ¥3,200 / Unit</p>
+        <p class="product-card-material">Saffiano crosshatch · Gold-tone lock</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CATALOG DOWNLOAD BANNER ══════════ -->
+<section class="catalog-banner fade-in">
+  <span class="label">Resources</span>
+  <h3>Download Our Full Product Catalog</h3>
+  <p>Complete specifications, dimensions, material details, and MOQ information for wholesale partners.</p>
+  <button class="btn-primary">Download PDF Catalog</button>
+</section>
+
+<!-- ══════════ CRAFTSMANSHIP ══════════ -->
+<section class="section craft-section" id="craftsmanship">
+  <div class="section-header fade-in" style="color: var(--pure-white);">
+    <span class="label" style="color: var(--gold);">The Process</span>
+    <div class="divider" style="margin: 16px auto;"></div>
+    <h2 class="section-title" style="color: var(--pure-white);">Uncompromising Craft</h2>
+    <p class="section-desc" style="color: rgba(255,255,255,0.5);">Every PAULILY piece passes through 47 individual steps — from raw material selection to final inspection. No shortcuts. No compromises.</p>
+  </div>
+
+  <div class="craft-grid">
+    <div class="craft-card fade-in">
+      <div class="craft-card-number">01</div>
+      <h3 class="craft-card-title">Material Selection</h3>
+      <p class="craft-card-desc">We source only full-grain leather from certified tanneries in Italy and China's Shandong province. Each hide is hand-inspected for surface consistency, grain density, and natural character.</p>
+    </div>
+    <div class="craft-card fade-in">
+      <div class="craft-card-number">02</div>
+      <h3 class="craft-card-title">Hand Cutting & Stitching</h3>
+      <p class="craft-card-desc">Master artisans cut each pattern by hand using traditional Chinese shears. Double-reinforced saddle stitching ensures structural integrity that outlasts machine-sewn alternatives by a factor of three.</p>
+    </div>
+    <div class="craft-card fade-in">
+      <div class="craft-card-number">03</div>
+      <h3 class="craft-card-title">Hardware & Finishing</h3>
+      <p class="craft-card-desc">Custom-milled brass and PVD-coated titanium hardware — designed to develop a living patina over years of use. Every clasp, every buckle, every edge is polished through seven progressive stages.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ HERITAGE ══════════ -->
+<section class="section heritage-section" id="heritage">
+  <div class="heritage-layout">
+    <div class="heritage-image-area fade-in">
+      <svg width="180" height="220" viewBox="0 0 180 220" fill="none">
+        <rect x="30" y="50" width="120" height="150" rx="10" stroke="#C9A84C" stroke-width="1" fill="none"/>
+        <path d="M50 50 Q90 20 130 50" stroke="#C9A84C" stroke-width="1" fill="none"/>
+        <text x="90" y="120" font-family="'Playfair Display', serif" font-size="14" fill="#C9A84C" text-anchor="middle" letter-spacing="4">PAULILY</text>
+        <line x1="60" y1="140" x2="120" y2="140" stroke="#D4D4D4" stroke-width="0.5"/>
+        <text x="90" y="155" font-family="'Cormorant Garamond', serif" font-size="8" fill="#9A9A9A" text-anchor="middle" font-style="italic">est. Shanghai</text>
+      </svg>
+    </div>
+    <div class="heritage-text fade-in">
+      <span class="label">Our Heritage</span>
+      <div class="divider-wide" style="margin-bottom: 20px;"></div>
+      <h2>A Brand Born<br>from <em style="color: var(--gold); font-family: var(--font-accent);">Conviction</em></h2>
+      <p>PAULILY was founded in Shanghai with a singular conviction: that Chinese craftsmanship deserves the same global reverence as its European counterparts. We do not imitate — we originate.</p>
+      <p>Our design philosophy draws from the tension between Eastern aesthetic discipline and Western architectural precision. The result is a product that speaks quietly but carries unmistakable authority.</p>
+      <div class="heritage-stats">
+        <div>
+          <div class="heritage-stat-number">47</div>
+          <div class="heritage-stat-label">Steps Per Piece</div>
+        </div>
+        <div>
+          <div class="heritage-stat-number">12+</div>
+          <div class="heritage-stat-label">Countries</div>
+        </div>
+        <div>
+          <div class="heritage-stat-number">98%</div>
+          <div class="heritage-stat-label">Repeat Orders</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ WHOLESALE INQUIRY ══════════ -->
+<section class="section inquiry-section" id="inquiry">
+  <div class="inquiry-layout">
+    <div class="inquiry-info fade-in">
+      <span class="label">Wholesale Partnership</span>
+      <div class="divider-wide" style="margin-bottom: 20px;"></div>
+      <h2>Let's Build<br>Something <em style="color: var(--gold); font-family: var(--font-accent);">Together</em></h2>
+      <p>We welcome inquiries from established retailers, distributors, and brand partners worldwide. Our wholesale program offers competitive margins, dedicated account management, and flexible MOQ arrangements.</p>
+      <div style="margin-top: 24px;">
+        <div class="inquiry-contact-item">
+          <div class="inquiry-contact-icon">✉</div>
+          <span>wholesale@paulily.com</span>
+        </div>
+        <div class="inquiry-contact-item">
+          <div class="inquiry-contact-icon">☎</div>
+          <span>+86 21 6888 XXXX</span>
+        </div>
+        <div class="inquiry-contact-item">
+          <div class="inquiry-contact-icon">⌂</div>
+          <span>Shanghai, China</span>
+        </div>
+      </div>
+      <div style="margin-top: 24px; padding: 20px; border: 1px solid var(--light-gray); background: var(--pure-white);">
+        <span class="label" style="color: var(--gold); display: block; margin-bottom: 8px;">Wholesale Benefits</span>
+        <div style="font-family: var(--font-sans); font-size: 0.8125rem; color: var(--dark-gray); line-height: 1.8;">
+          · Competitive tiered pricing<br>
+          · Low minimum order quantities<br>
+          · Custom branding & packaging options<br>
+          · Dedicated account manager<br>
+          · Worldwide shipping support<br>
+          · Quality guarantee on every unit
+        </div>
+      </div>
+    </div>
+    <div class="inquiry-form fade-in">
+      <form id="inquiryForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Company Name</label>
+            <input type="text" class="form-input" placeholder="Your company">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Person</label>
+            <input type="text" class="form-input" placeholder="Full name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" placeholder="email@company.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" class="form-input" placeholder="+1 (555) 000-0000">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Country / Region</label>
+          <select class="form-select">
+            <option>Select your region</option>
+            <option>North America</option>
+            <option>Europe</option>
+            <option>Asia-Pacific</option>
+            <option>Middle East</option>
+            <option>South America</option>
+            <option>Africa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Business Type</label>
+          <select class="form-select">
+            <option>Select your business type</option>
+            <option>Retailer</option>
+            <option>Distributor</option>
+            <option>E-commerce Platform</option>
+            <option>Brand Partner</option>
+            <option>Private Label / OEM</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Products of Interest</label>
+          <select class="form-select">
+            <option>Select product category</option>
+            <option>Full Collection</option>
+            <option>INK DRAGON Series</option>
+            <option>Shadow Series</option>
+            <option>Lonely Walker Series</option>
+            <option>Gothic Series</option>
+            <option>Custom / Private Label</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estimated Order Volume</label>
+          <select class="form-select">
+            <option>Select estimated volume</option>
+            <option>50 – 200 units</option>
+            <option>200 – 500 units</option>
+            <option>500 – 1,000 units</option>
+            <option>1,000+ units</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Additional Notes</label>
+          <textarea class="form-textarea" placeholder="Tell us about your business, market focus, or any specific requirements..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Submit Inquiry</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="footer">
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">P A U L I L Y</div>
+      <p class="footer-brand-desc">Crafted for the discerning. Where Eastern artistry meets uncompromising quality.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Collection</div>
+      <ul class="footer-col-links">
+        <li><a href="#">INK DRAGON</a></li>
+        <li><a href="#">Shadow</a></li>
+        <li><a href="#">Lonely Walker</a></li>
+        <li><a href="#">Gothic</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-col-links">
+        <li><a href="#">Heritage</a></li>
+        <li><a href="#">Craftsmanship</a></li>
+        <li><a href="#">Wholesale</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Connect</div>
+      <ul class="footer-col-links">
+        <li><a href="#">wholesale@paulily.com</a></li>
+        <li><a href="#">+86 21 6888 XXXX</a></li>
+        <li><a href="#">Shanghai, China</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 PAULILY. All rights reserved.</span>
+    <div class="footer-social">
+      <a href="#" title="Instagram">Ig</a>
+      <a href="#" title="LinkedIn">Li</a>
+      <a href="#" title="WeChat">Wx</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<script>
+// Scroll-triggered fade-in animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Navbar shrink on scroll
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  if (window.scrollY > 80) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+});
+
+// Form submission mock
+document.getElementById('inquiryForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = 'Inquiry Sent ✓';
+  btn.style.background = 'var(--gold)';
+  btn.style.color = 'var(--black)';
+  setTimeout(() => {
+    btn.textContent = 'Submit Inquiry';
+    btn.style.background = 'var(--black)';
+    btn.style.color = 'var(--pure-white)';
+  }, 3000);
+});
+</script>
+
+</body>
+</html>

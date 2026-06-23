@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+
+/* ═══════════════════════════════════════════
+   PAULILY INTERNATIONAL — B2B SHOWCASE
+   Design DNA: Refined · Substantial · Quiet Luxury
+   ═══════════════════════════════════════════ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+  body {
+    @apply font-sans text-p-black bg-p-pure-white antialiased;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  h1, h2, h3 {
+    @apply font-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  /* ─── Label ─── */
+  .label {
+    @apply font-sans text-[0.6875rem] tracking-label uppercase text-p-mid-gray font-medium;
+  }
+
+  /* ─── Divider ─── */
+  .divider {
+    @apply inline-block w-10 h-[1px] bg-p-gold;
+  }
+  .divider-wide {
+    @apply w-[60px] h-[1px] bg-p-light-gray;
+  }
+
+  /* ─── Buttons ─── */
+  .btn-primary {
+    @apply font-sans text-[0.6875rem] tracking-[0.16em] uppercase bg-p-black text-p-pure-white 
+           py-[14px] px-10 border-none cursor-pointer font-medium 
+           transition-all duration-350 ease-in-out no-underline inline-block text-center;
+  }
+  .btn-primary:hover {
+    @apply bg-p-gold text-p-black -translate-y-[1px];
+  }
+
+  .btn-secondary {
+    @apply font-sans text-[0.6875rem] tracking-[0.16em] uppercase bg-transparent text-p-dark-gray 
+           py-[14px] px-10 border border-p-light-gray cursor-pointer font-medium 
+           transition-all duration-350 ease-in-out no-underline inline-block text-center;
+  }
+  .btn-secondary:hover {
+    @apply border-p-gold text-p-gold;
+  }
+
+  /* ─── Scroll Animation ─── */
+  .fade-in {
+    @apply opacity-0 translate-y-5;
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .fade-in.visible {
+    @apply opacity-100 translate-y-0;
+  }
+
+  /* ─── Section ─── */
+  .section {
+    @apply py-[clamp(80px,10vw,140px)] px-[clamp(24px,4vw,80px)];
+  }
+
+  /* ─── Craft Card ─── */
+  .craft-card {
+    @apply p-[clamp(32px,4vw,48px)] border border-white/[0.08] transition-border-color duration-400 relative;
+  }
+  .craft-card:hover {
+    @apply border-p-gold/40;
+  }
+
+  /* ─── Form ─── */
+  .form-input, .form-select, .form-textarea {
+    @apply w-full py-3 px-4 border border-p-light-gray font-sans text-sm text-p-black 
+           bg-p-pure-white transition-border-color duration-300 outline-none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    @apply border-p-gold;
+  }
+  .form-textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  .form-label {
+    @apply font-sans text-[0.6875rem] tracking-[0.12em] uppercase text-p-mid-gray font-medium mb-2 block;
+  }
+  .form-submit {
+    @apply font-sans text-[0.6875rem] tracking-[0.16em] uppercase bg-p-black text-p-pure-white 
+           py-[14px] px-12 border-none cursor-pointer font-medium w-full mt-2
+           transition-all duration-350 ease-in-out;
+  }
+  .form-submit:hover {
+    @apply bg-p-gold text-p-black;
+  }
+}
