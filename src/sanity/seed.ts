@@ -125,7 +125,7 @@ async function seed() {
 
   try {
     const result = await transaction.commit();
-    console.log(`✅ Seeded ${result.length} documents successfully!`);
+    console.log('✅ Seeded documents successfully!');
   } catch (err) {
     console.error('❌ Seed failed:', err);
   }
