@@ -2,6 +2,8 @@
 
 import { NextStudio } from 'next-sanity/studio';
 import { defineConfig } from 'sanity';
+import { defineType, defineField } from 'sanity';
+import { structureTool } from 'sanity/structure';
 
 const config = defineConfig({
   name: 'paulily-intl',
@@ -9,75 +11,91 @@ const config = defineConfig({
   projectId: '6at2dhek',
   dataset: 'production',
   basePath: '/studio',
+  plugins: [
+    structureTool({
+      structure: (S: any) =>
+        S.list()
+          .title('Content')
+          .items([
+            S.documentTypeListItem('product'),
+            S.documentTypeListItem('series'),
+            S.documentTypeListItem('craftStep'),
+            S.documentTypeListItem('brandContent'),
+            S.documentTypeListItem('stat'),
+            S.documentTypeListItem('siteConfig'),
+          ]),
+    }),
+  ],
   schema: {
     types: [
-      {
+      defineType({
         name: 'product',
+        type: 'document',
         title: 'Product',
-        type: 'document',
         fields: [
-          { name: 'name', title: 'Chinese Name', type: 'string' },
-          { name: 'nameEn', title: 'English Name', type: 'string' },
-          { name: 'slug', title: 'Slug', type: 'slug', options: { source: 'nameEn' } },
-          { name: 'series', title: 'Series (Chinese)', type: 'string' },
-          { name: 'seriesEn', title: 'Series (English)', type: 'string' },
-          { name: 'priceRange', title: 'Price Range', type: 'string' },
-          { name: 'materialEn', title: 'Material', type: 'string' },
-          { name: 'descriptionEn', title: 'Description', type: 'text' },
-          { name: 'image', title: 'Image', type: 'image' },
+          defineField({ name: 'name', title: 'Chinese Name', type: 'string' }),
+          defineField({ name: 'nameEn', title: 'English Name', type: 'string' }),
+          defineField({ name: 'slug', title: 'Slug', type: 'slug', options: { source: 'nameEn' } }),
+          defineField({ name: 'series', title: 'Series (Chinese)', type: 'string' }),
+          defineField({ name: 'seriesEn', title: 'Series (English)', type: 'string' }),
+          defineField({ name: 'priceRange', title: 'Price Range', type: 'string' }),
+          defineField({ name: 'image', title: 'Image', type: 'image' }),
         ],
-      },
-      {
+      }),
+
+      defineType({
         name: 'series',
+        type: 'document',
         title: 'Product Series',
-        type: 'document',
         fields: [
-          { name: 'name', title: 'Chinese Name', type: 'string' },
-          { name: 'nameEn', title: 'English Name', type: 'string' },
-          { name: 'descriptionEn', title: 'Description', type: 'text' },
+          defineField({ name: 'name', title: 'Chinese Name', type: 'string' }),
+          defineField({ name: 'nameEn', title: 'English Name', type: 'string' }),
         ],
-      },
-      {
+      }),
+
+      defineType({
         name: 'craftStep',
+        type: 'document',
         title: 'Craftsmanship Step',
-        type: 'document',
         fields: [
-          { name: 'number', title: 'Step Number', type: 'string' },
-          { name: 'titleEn', title: 'Title', type: 'string' },
-          { name: 'descriptionEn', title: 'Description', type: 'text' },
-          { name: 'image', title: 'Image', type: 'image' },
+          defineField({ name: 'number', title: 'Step Number', type: 'string' }),
+          defineField({ name: 'titleEn', title: 'Title', type: 'string' }),
+          defineField({ name: 'descriptionEn', title: 'Description', type: 'text' }),
         ],
-      },
-      {
+      }),
+
+      defineType({
         name: 'brandContent',
+        type: 'document',
         title: 'Brand Content',
-        type: 'document',
         fields: [
-          { name: 'section', title: 'Section', type: 'string' },
-          { name: 'titleEn', title: 'Title', type: 'string' },
-          { name: 'bodyEn', title: 'Body Text', type: 'text' },
+          defineField({ name: 'section', title: 'Section', type: 'string' }),
+          defineField({ name: 'titleEn', title: 'Title', type: 'string' }),
+          defineField({ name: 'bodyEn', title: 'Body Text', type: 'text' }),
         ],
-      },
-      {
+      }),
+
+      defineType({
         name: 'stat',
+        type: 'document',
         title: 'Heritage Stat',
-        type: 'document',
         fields: [
-          { name: 'number', title: 'Value', type: 'string' },
-          { name: 'label', title: 'Label', type: 'string' },
+          defineField({ name: 'number', title: 'Value', type: 'string' }),
+          defineField({ name: 'label', title: 'Label', type: 'string' }),
         ],
-      },
-      {
+      }),
+
+      defineType({
         name: 'siteConfig',
-        title: 'Site Configuration',
         type: 'document',
+        title: 'Site Configuration',
         fields: [
-          { name: 'title', title: 'Site Title', type: 'string' },
-          { name: 'email', title: 'Email', type: 'string' },
-          { name: 'phone', title: 'Phone', type: 'string' },
-          { name: 'location', title: 'Location', type: 'string' },
+          defineField({ name: 'title', title: 'Site Title', type: 'string' }),
+          defineField({ name: 'email', title: 'Email', type: 'string' }),
+          defineField({ name: 'phone', title: 'Phone', type: 'string' }),
+          defineField({ name: 'location', title: 'Location', type: 'string' }),
         ],
-      },
+      }),
     ],
   },
 });
