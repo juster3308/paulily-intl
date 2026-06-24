@@ -2,99 +2,78 @@
 // PAULILY International — Sanity Schemas
 // ═══════════════════════════════════════════
 
-const product = {
+import { defineType, defineField } from 'sanity';
+
+const product = defineType({
   name: 'product',
   title: 'Product',
   type: 'document',
   fields: [
-    {
-      name: 'id',
-      title: 'Product ID (slug)',
-      type: 'slug',
-      options: { source: 'nameEn' },
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+    defineField({
       name: 'name',
       title: 'Chinese Name',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'nameEn',
       title: 'English Name',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: { source: 'nameEn' },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'series',
       title: 'Series (Chinese)',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'seriesEn',
       title: 'Series (English)',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
-      name: 'priceUnit',
-      title: 'Price Unit',
-      type: 'string',
-      description: 'e.g. ¥3,800',
-    },
-    {
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'priceRange',
       title: 'Price Range Display',
       type: 'string',
       description: 'e.g. From ¥3,800 / Unit',
-    },
-    {
-      name: 'material',
-      title: 'Material (Chinese)',
-      type: 'string',
-    },
-    {
+    }),
+    defineField({
       name: 'materialEn',
       title: 'Material (English)',
       type: 'string',
-    },
-    {
-      name: 'description',
-      title: 'Description (Chinese)',
-      type: 'text',
-      rows: 3,
-    },
-    {
+    }),
+    defineField({
       name: 'descriptionEn',
       title: 'Description (English)',
       type: 'text',
       rows: 3,
-    },
-    {
+    }),
+    defineField({
       name: 'dimensions',
       title: 'Dimensions',
       type: 'string',
       description: 'e.g. 38 × 28 × 14 cm',
-    },
-    {
+    }),
+    defineField({
       name: 'moq',
       title: 'Minimum Order Quantity',
       type: 'number',
-    },
-    {
+    }),
+    defineField({
       name: 'image',
       title: 'Product Image',
       type: 'image',
       options: { hotspot: true },
-    },
-    {
-      name: 'features',
-      title: 'Features (English)',
-      type: 'array',
-      of: [{ type: 'string' }],
-    },
+    }),
   ],
   preview: {
     select: {
@@ -103,42 +82,37 @@ const product = {
       media: 'image',
     },
   },
-};
+});
 
-const series = {
+const series = defineType({
   name: 'series',
   title: 'Product Series',
   type: 'document',
   fields: [
-    {
-      name: 'id',
-      title: 'Series ID (slug)',
-      type: 'slug',
-      options: { source: 'nameEn' },
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+    defineField({
       name: 'name',
       title: 'Chinese Name',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'nameEn',
       title: 'English Name',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
-      name: 'description',
-      title: 'Description (Chinese)',
-      type: 'text',
-    },
-    {
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: { source: 'nameEn' },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'descriptionEn',
       title: 'Description (English)',
       type: 'text',
-    },
+    }),
   ],
   preview: {
     select: {
@@ -146,50 +120,38 @@ const series = {
       subtitle: 'name',
     },
   },
-};
+});
 
-const craftStep = {
+const craftStep = defineType({
   name: 'craftStep',
   title: 'Craftsmanship Step',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'number',
       title: 'Step Number',
       type: 'string',
       description: 'e.g. 01, 02, 03',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
-      name: 'title',
-      title: 'Step Title (Chinese)',
-      type: 'string',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'titleEn',
       title: 'Step Title (English)',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
-      name: 'description',
-      title: 'Description (Chinese)',
-      type: 'text',
-      rows: 4,
-    },
-    {
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'descriptionEn',
       title: 'Description (English)',
       type: 'text',
       rows: 4,
-    },
-    {
+    }),
+    defineField({
       name: 'image',
       title: 'Step Image',
       type: 'image',
       options: { hotspot: true },
-    },
+    }),
   ],
   preview: {
     select: {
@@ -198,14 +160,14 @@ const craftStep = {
       media: 'image',
     },
   },
-};
+});
 
-const brandContent = {
+const brandContent = defineType({
   name: 'brandContent',
   title: 'Brand Content',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'section',
       title: 'Section',
       type: 'string',
@@ -215,45 +177,27 @@ const brandContent = {
           { title: 'Collection Intro', value: 'collectionIntro' },
           { title: 'Heritage', value: 'heritage' },
           { title: 'Wholesale Benefits', value: 'wholesaleBenefits' },
-          { title: 'Values', value: 'values' },
-          { title: 'Quality Standards', value: 'qualityStandards' },
         ],
       },
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'titleEn',
       title: 'Title (English)',
       type: 'string',
-    },
-    {
-      name: 'titleZh',
-      title: 'Title (Chinese)',
-      type: 'string',
-    },
-    {
-      name: 'subtitleEn',
-      title: 'Subtitle / Accent (English)',
-      type: 'string',
-    },
-    {
-      name: 'bodyEn',
+    }),
+    defineField({
+      body: 'bodyEn',
       title: 'Body Text (English)',
       type: 'text',
       rows: 5,
-    },
-    {
-      name: 'bodyZh',
-      title: 'Body Text (Chinese)',
-      type: 'text',
-      rows: 5,
-    },
-    {
+    }),
+    defineField({
       name: 'image',
       title: 'Section Image',
       type: 'image',
       options: { hotspot: true },
-    },
+    }),
   ],
   preview: {
     select: {
@@ -261,29 +205,24 @@ const brandContent = {
       subtitle: 'section',
     },
   },
-};
+});
 
-const stat = {
+const stat = defineType({
   name: 'stat',
   title: 'Heritage Stat',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'number',
       title: 'Number / Value',
       type: 'string',
       description: 'e.g. 47, 12+, 98%',
-    },
-    {
+    }),
+    defineField({
       name: 'label',
       title: 'Label (English)',
       type: 'string',
-    },
-    {
-      name: 'labelZh',
-      title: 'Label (Chinese)',
-      type: 'string',
-    },
+    }),
   ],
   preview: {
     select: {
@@ -291,68 +230,52 @@ const stat = {
       subtitle: 'label',
     },
   },
-};
+});
 
-const siteConfig = {
+const siteConfig = defineType({
   name: 'siteConfig',
   title: 'Site Configuration',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'title',
       title: 'Site Title',
       type: 'string',
       initialValue: 'PAULILY — Crafted for the Discerning',
-    },
-    {
-      name: 'description',
-      title: 'Site Description',
-      type: 'text',
-      rows: 2,
-    },
-    {
+    }),
+    defineField({
       name: 'email',
       title: 'Wholesale Email',
       type: 'string',
       initialValue: 'wholesale@paulily.com',
-    },
-    {
+    }),
+    defineField({
       name: 'phone',
       title: 'Phone Number',
       type: 'string',
-    },
-    {
+    }),
+    defineField({
       name: 'location',
       title: 'Location',
       type: 'string',
       initialValue: 'Shanghai, China',
-    },
-    {
+    }),
+    defineField({
       name: 'logo',
       title: 'Logo Image',
       type: 'image',
-    },
-    {
+    }),
+    defineField({
       name: 'catalogPdf',
       title: 'Product Catalog PDF',
       type: 'file',
-    },
-    {
-      name: 'instagramUrl',
-      title: 'Instagram URL',
-      type: 'url',
-    },
-    {
-      name: 'linkedinUrl',
-      title: 'LinkedIn URL',
-      type: 'url',
-    },
+    }),
   ],
   preview: {
     select: {
       title: 'title',
     },
   },
-};
+});
 
 export const schemaTypes = [product, series, craftStep, brandContent, stat, siteConfig];
