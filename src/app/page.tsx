@@ -1,10 +1,36 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { products, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
+import { useEffect, useRef, useState } from 'react';
+import { products as staticProducts, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
+import { fetchProducts } from '@/lib/fetch-data';
+import { urlFor } from '@/lib/sanity';
+
+// Extend Product type to include raw image
+interface ProductWithImage {
+  id: string;
+  name: string;
+  nameEn: string;
+  series: string;
+  seriesEn: string;
+  priceUnit: string;
+  priceRange: string;
+  material: string;
+  materialEn: string;
+  description: string;
+  descriptionEn: string;
+  dimensions: string;
+  moq: number;
+  image: string;
+  features: string[];
+  _rawImage?: any;
+}
 
 export default function Home() {
   const fadeRefs = useRef<HTMLDivElement[]>([]);
+  
+  // State for Sanity-fetched products (with images)
+  const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
+  const [imagesLoaded, setImagesLoaded] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -23,10 +49,49 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  // Fetch products from Sanity on mount
+  useEffect(() => {
+    fetchProducts().then((fetched) => {
+      if (fetched && fetched.length > 0) {
+        setProducts(fetched);
+      }
+    });
+  }, []);
+
   const addFadeRef = (el: HTMLDivElement | null) => {
     if (el && !fadeRefs.current.includes(el)) {
       fadeRefs.current.push(el);
     }
+  };
+
+  // Render product image - real image from Sanity or SVG fallback
+  const renderProductImage = (product: ProductWithImage) => {
+    const hasRealImage = product._rawImage || (product.image && !product.image.startsWith('/'));
+    
+    if (hasRealImage) {
+      const imgUrl = product._rawImage 
+        ? urlFor(product._rawImage).width(600).height(800).fit('crop').quality(90).url()
+        : product.image;
+      
+      return (
+        <img
+          src={imgUrl}
+          alt={product.nameEn}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+          loading="lazy"
+          onLoad={(e) => setImagesLoaded(prev => ({ ...prev, [product.id]: true }))}
+        />
+      );
+    }
+    
+    // SVG fallback (no image in Sanity)
+    return (
+      <svg width="120" height="160" viewBox="0 0 120 160" fill="none" className="transition-transform duration-500 group-hover:scale-[1.05]">
+        <rect x="20" y="30" width="80" height="110" rx="8" stroke="#C9A84C" strokeWidth="1" fill="none"/>
+        <path d="M30 30 Q60 5 90 30" stroke="#C9A84C" strokeWidth="1" fill="none"/>
+        <rect x="50" y="50" width="20" height="24" rx="3" stroke="#3A3A3A" strokeWidth="0.5" fill="none"/>
+      </svg>
+    );
   };
 
   return (
@@ -82,13 +147,9 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[clamp(20px,3vw,40px)] max-w-[1200px] mx-auto">
           {products.map((product) => (
             <div key={product.id} ref={addFadeRef} className="fade-in group relative overflow-hidden bg-p-off-white cursor-pointer transition-transform duration-300 hover:-translate-y-1">
-              {/* Product image placeholder */}
+              {/* Product image - REAL IMAGE FROM SANITY OR SVG FALLBACK */}
               <div className="aspect-[3/4] bg-p-cream flex items-center justify-center overflow-hidden relative">
-                <svg width="120" height="160" viewBox="0 0 120 160" fill="none" className="transition-transform duration-500 group-hover:scale-[1.05]">
-                  <rect x="20" y="30" width="80" height="110" rx="8" stroke="#C9A84C" strokeWidth="1" fill="none"/>
-                  <path d="M30 30 Q60 5 90 30" stroke="#C9A84C" strokeWidth="1" fill="none"/>
-                  <rect x="50" y="50" width="20" height="24" rx="3" stroke="#3A3A3A" strokeWidth="0.5" fill="none"/>
-                </svg>
+                {renderProductImage(product)}
                 
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/0 flex items-center justify-center transition-[background] duration-300 group-hover:bg-[rgba(10,10,10,0.15)]">

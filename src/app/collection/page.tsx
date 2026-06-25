@@ -1,22 +1,56 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { products, seriesList } from '@/lib/data';
+import { products as staticProducts, seriesList } from '@/lib/data';
+import { fetchProducts } from '@/lib/fetch-data';
+import { urlFor } from '@/lib/sanity';
+
+interface ProductWithImage {
+  id: string;
+  name: string;
+  nameEn: string;
+  series: string;
+  seriesEn: string;
+  priceUnit: string;
+  priceRange: string;
+  material: string;
+  materialEn: string;
+  description: string;
+  descriptionEn: string;
+  dimensions: string;
+  moq: number;
+  image: string;
+  features: string[];
+  _rawImage?: any;
+}
 
 export default function CollectionPage() {
   const [filter, setFilter] = useState<string>('all');
   const fadeRefs = useRef<HTMLDivElement[]>([]);
+  
+  // State for Sanity-fetched products
+  const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
+
+  useEffect(() => {
+    fetchProducts().then((fetched) => {
+      if (fetched && fetched.length > 0) setProducts(fetched);
+    });
+  }, []);
 
   const filtered = filter === 'all' 
     ? products 
     : products.filter(p => {
-        const seriesMap: Record<string, string[]> = {
-          'ink-dragon': ['sovereign', 'citadel'],
-          'shadow': ['phantom', 'crescent'],
-          'lonely-walker': ['wanderer'],
-          'gothic': ['cathedral'],
-        };
-        return seriesMap[filter]?.includes(p.id);
+        // Try matching by seriesEn first (Sanity data), then fallback
+        const filterName = seriesList.find(s => s.id === filter)?.nameEn || '';
+        return p.seriesEn === filterName || (() => {
+          const seriesMap: Record<string, string[]> = {
+            'ink-dragon': ['sovereign', 'citadel'],
+            'shadow': ['phantom', 'crescent'],
+            'lonely-walker': ['wanderer'],
+            'gothic': ['cathedral'],
+          };
+          return seriesMap[filter]?.includes(p.id);
+        })();
       });
 
   useEffect(() => {
@@ -35,6 +69,34 @@ export default function CollectionPage() {
 
   const addRef = (el: HTMLDivElement | null) => {
     if (el && !fadeRefs.current.includes(el)) fadeRefs.current.push(el);
+  };
+
+  // Render product image - real image from Sanity or SVG fallback
+  const renderProductImage = (product: ProductWithImage) => {
+    const hasRealImage = product._rawImage || (product.image && !product.image.startsWith('/'));
+    
+    if (hasRealImage) {
+      const imgUrl = product._rawImage 
+        ? urlFor(product._rawImage).width(600).height(800).fit('crop').quality(90).url()
+        : product.image;
+      
+      return (
+        <img
+          src={imgUrl}
+          alt={product.nameEn}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+          loading="lazy"
+        />
+      );
+    }
+    
+    return (
+      <svg width="120" height="160" viewBox="0 0 120 160" fill="none" className="transition-transform duration-500 group-hover:scale-[1.05]">
+        <rect x="20" y="30" width="80" height="110" rx="8" stroke="#C9A84C" strokeWidth="1" fill="none"/>
+        <path d="M30 30 Q60 5 90 30" stroke="#C9A84C" strokeWidth="1" fill="none"/>
+        <rect x="50" y="50" width="20" height="24" rx="3" stroke="#3A3A3A" strokeWidth="0.5" fill="none"/>
+      </svg>
+    );
   };
 
   return (
@@ -80,11 +142,7 @@ export default function CollectionPage() {
             <div key={product.id} ref={addRef} className="fade-in group relative overflow-hidden bg-p-pure-white cursor-pointer transition-transform duration-300 hover:-translate-y-1">
               <a href={`/collection/${product.id}`} className="no-underline text-p-black">
                 <div className="aspect-[3/4] bg-p-cream flex items-center justify-center overflow-hidden relative">
-                  <svg width="120" height="160" viewBox="0 0 120 160" fill="none" className="transition-transform duration-500 group-hover:scale-[1.05]">
-                    <rect x="20" y="30" width="80" height="110" rx="8" stroke="#C9A84C" strokeWidth="1" fill="none"/>
-                    <path d="M30 30 Q60 5 90 30" stroke="#C9A84C" strokeWidth="1" fill="none"/>
-                    <rect x="50" y="50" width="20" height="24" rx="3" stroke="#3A3A3A" strokeWidth="0.5" fill="none"/>
-                  </svg>
+                  {renderProductImage(product)}
                   <div className="absolute inset-0 bg-black/0 flex items-center justify-center transition-[background] duration-300 group-hover:bg-[rgba(10,10,10,0.15)]">
                     <span className="font-sans text-[0.6875rem] tracking-label uppercase text-white opacity-0 translate-y-2 transition-all duration-300 font-medium py-2.5 px-6 border border-white/60 group-hover:opacity-100 group-hover:translate-y-0">
                       View Details

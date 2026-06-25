@@ -1,11 +1,42 @@
 'use client';
 
-import { useState } from 'react';
-import { products } from '@/lib/data';
+import { useState, useEffect } from 'react';
+import { products as staticProducts } from '@/lib/data';
+import { fetchProducts } from '@/lib/fetch-data';
+import { urlFor } from '@/lib/sanity';
+
+interface ProductWithImage {
+  id: string;
+  name: string;
+  nameEn: string;
+  series: string;
+  seriesEn: string;
+  priceUnit: string;
+  priceRange: string;
+  material: string;
+  materialEn: string;
+  description: string;
+  descriptionEn: string;
+  dimensions: string;
+  moq: number;
+  image: string;
+  features: string[];
+  _rawImage?: any;
+}
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const product = products.find(p => p.id === params.id);
+  const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
+  
+  // Find product by ID
+  const product = products.find(p => p.id === params.id) || 
+    products.find(p => p.nameEn?.toLowerCase().includes(params.id.toLowerCase()));
   const [activeTab, setActiveTab] = useState<'specs' | 'story'>('specs');
+
+  useEffect(() => {
+    fetchProducts().then((fetched) => {
+      if (fetched && fetched.length > 0) setProducts(fetched);
+    });
+  }, []);
 
   if (!product) {
     return (
@@ -18,19 +49,28 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     );
   }
 
+  const hasRealImage = product._rawImage || (product.image && !product.image.startsWith('/'));
+  const imgUrl = hasRealImage 
+    ? (product._rawImage ? urlFor(product._rawImage).width(800).height(1000).fit('crop').quality(90).url() : product.image)
+    : null;
+
   return (
     <div className="min-h-screen pt-[72px]">
       <section className="section bg-p-warm-white">
         <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-[clamp(40px,6vw,80px)] items-start">
-          {/* Image area */}
+          {/* Image area - REAL IMAGE FROM SANITY OR SVG FALLBACK */}
           <div className="aspect-[4/5] bg-p-cream border border-p-light-gray flex items-center justify-center relative overflow-hidden">
             <div className="absolute top-5 left-5 right-5 bottom-5 border border-p-gold/20" />
-            <svg width="200" height="260" viewBox="0 0 200 260" fill="none">
-              <rect x="40" y="50" width="120" height="160" rx="10" stroke="#C9A84C" strokeWidth="1.5" fill="none"/>
-              <path d="M60 50 Q100 15 140 50" stroke="#C9A84C" strokeWidth="1.5" fill="none"/>
-              <rect x="80" y="80" width="40" height="40" rx="5" stroke="#3A3A3A" strokeWidth="0.8" fill="none"/>
-              <line x1="100" y1="88" x2="100" y2="108" stroke="#9A9A9A" strokeWidth="0.5"/>
-            </svg>
+            {imgUrl ? (
+              <img src={imgUrl} alt={product.nameEn} className="w-full h-full object-cover" />
+            ) : (
+              <svg width="200" height="260" viewBox="0 0 200 260" fill="none">
+                <rect x="40" y="50" width="120" height="160" rx="10" stroke="#C9A84C" strokeWidth="1.5" fill="none"/>
+                <path d="M60 50 Q100 15 140 50" stroke="#C9A84C" strokeWidth="1.5" fill="none"/>
+                <rect x="80" y="80" width="40" height="40" rx="5" stroke="#3A3A3A" strokeWidth="0.8" fill="none"/>
+                <line x1="100" y1="88" x2="100" y2="108" stroke="#9A9A9A" strokeWidth="0.5"/>
+              </svg>
+            )}
           </div>
 
           {/* Info area */}
@@ -42,7 +82,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             <div className="divider-wide mb-6" />
             
             <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8] mb-8">
-              {product.descriptionEn}
+              {product.descriptionEn || `${product.nameEn} is a signature piece from our ${product.seriesEn} series, crafted with exceptional materials and uncompromising attention to detail.`}
             </p>
 
             {/* Price & MOQ */}
@@ -53,7 +93,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               </div>
               <div className="flex justify-between items-center">
                 <span className="label">Minimum Order</span>
-                <span className="font-sans text-sm text-p-dark-gray">{product.moq} units</span>
+                <span className="font-sans text-sm text-p-dark-gray">{product.moq || '—'} units</span>
               </div>
             </div>
 
@@ -73,32 +113,38 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
             {activeTab === 'specs' && (
               <div>
-                <div className="mb-6">
-                  <span className="label block mb-3">Dimensions</span>
-                  <p className="font-sans text-sm text-p-dark-gray">{product.dimensions}</p>
-                </div>
-                <div className="mb-6">
-                  <span className="label block mb-3">Material</span>
-                  <p className="font-sans text-sm text-p-dark-gray">{product.materialEn}</p>
-                </div>
-                <div>
-                  <span className="label block mb-3">Features</span>
-                  <ul className="list-none space-y-2">
-                    {product.features.map((f, i) => (
-                      <li key={i} className="font-sans text-sm text-p-dark-gray flex items-center gap-3">
-                        <span className="w-[4px] h-[4px] bg-p-gold rounded-full inline-block" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {product.dimensions && (
+                  <div className="mb-6">
+                    <span className="label block mb-3">Dimensions</span>
+                    <p className="font-sans text-sm text-p-dark-gray">{product.dimensions}</p>
+                  </div>
+                )}
+                {product.materialEn && (
+                  <div className="mb-6">
+                    <span className="label block mb-3">Material</span>
+                    <p className="font-sans text-sm text-p-dark-gray">{product.materialEn}</p>
+                  </div>
+                )}
+                {product.features && product.features.length > 0 && (
+                  <div>
+                    <span className="label block mb-3">Features</span>
+                    <ul className="list-none space-y-2">
+                      {product.features.map((f, i) => (
+                        <li key={i} className="font-sans text-sm text-p-dark-gray flex items-center gap-3">
+                          <span className="w-[4px] h-[4px] bg-p-gold rounded-full inline-block" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
 
             {activeTab === 'story' && (
               <div>
                 <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8]">
-                  {product.descriptionEn}
+                  {product.descriptionEn || `The ${product.nameEn} represents the pinnacle of ${product.seriesEn} craftsmanship.`}
                 </p>
                 <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8] mt-4">
                   Each {product.nameEn} undergoes 47 hand-crafted steps before leaving our Shanghai workshop. From material selection through seven-stage edge polishing, every detail is a commitment to excellence without compromise.
