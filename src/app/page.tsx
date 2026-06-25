@@ -146,7 +146,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[clamp(20px,3vw,40px)] max-w-[1200px] mx-auto">
           {products.map((product) => (
-            <div key={product.id} ref={addFadeRef} className="fade-in group relative overflow-hidden bg-p-off-white cursor-pointer transition-transform duration-300 hover:-translate-y-1">
+            <a key={product.id} href={`/collection/${product.id}`} ref={addFadeRef} className="fade-in group relative overflow-hidden bg-p-off-white cursor-pointer transition-transform duration-300 hover:-translate-y-1 no-underline text-p-black block">
               {/* Product image - REAL IMAGE FROM SANITY OR SVG FALLBACK */}
               <div className="aspect-[3/4] bg-p-cream flex items-center justify-center overflow-hidden relative">
                 {renderProductImage(product)}
@@ -174,7 +174,7 @@ export default function Home() {
                   {product.materialEn}
                 </p>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </section>
