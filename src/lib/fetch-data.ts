@@ -31,7 +31,7 @@ export async function fetchProducts(): Promise<Product[]> {
     const results: SanityProduct[] = await sanityClient.fetch(query);
     
     if (!results || results.length === 0) {
-      return null; // Signal to use fallback
+      return []; // Use fallback
     }
     
     return results.map((doc) => ({
@@ -55,6 +55,6 @@ export async function fetchProducts(): Promise<Product[]> {
     }));
   } catch (err) {
     console.warn('Sanity fetch failed, using static data:', err);
-    return null;
+    return [];
   }
 }
