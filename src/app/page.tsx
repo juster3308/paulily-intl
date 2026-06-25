@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { products as staticProducts, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
-import { fetchProducts } from '@/lib/fetch-data';
+import { fetchProductsWithImages } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 // Extend Product type to include raw image
@@ -49,11 +49,11 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  // Fetch products from Sanity on mount
+  // Fetch products from Sanity on mount (merges with static data)
   useEffect(() => {
-    fetchProducts().then((fetched) => {
-      if (fetched && fetched.length > 0) {
-        setProducts(fetched);
+    fetchProductsWithImages(staticProducts).then((merged) => {
+      if (merged && merged.length > 0) {
+        setProducts(merged);
       }
     });
   }, []);

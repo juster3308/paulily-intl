@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { products as staticProducts, seriesList } from '@/lib/data';
-import { fetchProducts } from '@/lib/fetch-data';
+import { fetchProductsWithImages } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 interface ProductWithImage {
@@ -32,8 +32,8 @@ export default function CollectionPage() {
   const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
 
   useEffect(() => {
-    fetchProducts().then((fetched) => {
-      if (fetched && fetched.length > 0) setProducts(fetched);
+    fetchProductsWithImages(staticProducts).then((merged) => {
+      if (merged && merged.length > 0) setProducts(merged);
     });
   }, []);
 
