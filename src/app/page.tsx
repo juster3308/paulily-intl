@@ -26,7 +26,7 @@ interface ProductWithImage {
 }
 
 export default function Home() {
-  const fadeRefs = useRef<HTMLDivElement[]>([]);
+  const fadeRefs = useRef<HTMLElement[]>([]);
   
   // State for Sanity-fetched products (with images)
   const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
@@ -58,7 +58,7 @@ export default function Home() {
     });
   }, []);
 
-  const addFadeRef = (el: HTMLDivElement | null) => {
+  const addFadeRef = (el: HTMLElement | null) => {
     if (el && !fadeRefs.current.includes(el)) {
       fadeRefs.current.push(el);
     }
