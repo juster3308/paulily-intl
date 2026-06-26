@@ -22,14 +22,19 @@ export default function Header() {
       </a>
 
       <ul className="hidden md:flex gap-9 items-center list-none">
-        {['Collection', 'Craftsmanship', 'Heritage', 'Wholesale'].map((item) => (
-          <li key={item}>
-            <a href={`/#${item.toLowerCase()}`}
+        {[
+          { label: 'Collection', href: '/#collection' },
+          { label: 'Craftsmanship', href: '/#craftsmanship' },
+          { label: 'Heritage', href: '/#heritage' },
+          { label: 'Wholesale', href: '/#inquiry' },
+        ].map((item) => (
+          <li key={item.label}>
+            <a href={item.href}
               className="font-sans text-[0.75rem] tracking-nav uppercase text-p-dark-gray no-underline font-medium
                 relative pb-0.5 transition-colors duration-300 hover:text-p-black
                 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-p-gold
                 after:transition-[width] duration-300 hover:after:w-full">
-              {item}
+              {item.label}
             </a>
           </li>
         ))}
