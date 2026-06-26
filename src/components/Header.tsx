@@ -22,7 +22,7 @@ export default function Header() {
       </a>
 
       <ul className="hidden md:flex gap-9 items-center list-none">
-        {['Collection', 'Craftsmanship', 'Heritage', 'Wholesale'].map((item) => (
+        {['Collection', 'Craftsmanship', 'Heritage'].map((item) => (
           <li key={item}>
             <a href={`/#${item.toLowerCase()}`}
               className="font-sans text-[0.75rem] tracking-nav uppercase text-p-dark-gray no-underline font-medium
