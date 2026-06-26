@@ -38,8 +38,8 @@ export default function CollectionPage() {
   }, []);
 
   // Series filter: static seriesList + any new series from CMS
-  const cmsSeries = [...new Set(products.map(p => p.seriesEn).filter(Boolean))];
-  const allSeriesNames = [...new Set([...seriesList.map(s => s.nameEn), ...cmsSeries])];
+  const cmsSeries = Array.from(new Set(products.map(p => p.seriesEn).filter(Boolean)));
+  const allSeriesNames = Array.from(new Set([...seriesList.map(s => s.nameEn), ...cmsSeries]));
 
   const filtered = filter === 'all'
     ? products
