@@ -65,11 +65,17 @@ export default function Home() {
 
   // Build series cards: for each series, find the first product's image as cover
   const seriesCards = seriesList.map(s => {
-    const firstProduct = products.find(p => p.seriesEn === s.nameEn);
+    // Find first product of this series that has a real image
+    const firstProductWithImage = products.find(p =>
+      p.seriesEn === s.nameEn &&
+      (p._rawImage || (p.image && !p.image.startsWith('/')))
+    );
+    const firstProductAny = products.find(p => p.seriesEn === s.nameEn);
+
     return {
       ...s,
-      image: firstProduct?.image || '',
-      _rawImage: firstProduct?._rawImage,
+      image: firstProductWithImage?.image || firstProductAny?.image || '',
+      _rawImage: firstProductWithImage?._rawImage,
       productCount: products.filter(p => p.seriesEn === s.nameEn).length,
     };
   });
