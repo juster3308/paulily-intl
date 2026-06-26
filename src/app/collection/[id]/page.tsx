@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { products as staticProducts } from '@/lib/data';
-import { fetchProductsWithImages } from '@/lib/fetch-data';
+import { fetchProducts } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 interface ProductWithImage {
@@ -25,16 +24,16 @@ interface ProductWithImage {
 }
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
-  
-  // Find product by ID
-  const product = products.find(p => p.id === params.id) || 
-    products.find(p => p.nameEn?.toLowerCase().includes(params.id.toLowerCase()));
+  const [products, setProducts] = useState<ProductWithImage[]>([]);
+
+  // Find product by ID (slug)
+  const product = products.find(p => p.id === params.id) ||
+    products.find(p => p.nameEn?.toLowerCase().replace(/\s+/g, '-') === params.id.toLowerCase());
   const [activeTab, setActiveTab] = useState<'specs' | 'story'>('specs');
 
   useEffect(() => {
-    fetchProductsWithImages(staticProducts).then((merged) => {
-      if (merged && merged.length > 0) setProducts(merged);
+    fetchProducts().then((fetched) => {
+      if (fetched && fetched.length > 0) setProducts(fetched);
     });
   }, []);
 

@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { products as staticProducts, seriesList } from '@/lib/data';
-import { fetchProductsWithImages } from '@/lib/fetch-data';
+import { fetchProducts } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 interface ProductWithImage {
@@ -27,31 +26,22 @@ interface ProductWithImage {
 export default function CollectionPage() {
   const [filter, setFilter] = useState<string>('all');
   const fadeRefs = useRef<HTMLDivElement[]>([]);
-  
-  // State for Sanity-fetched products
-  const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
+
+  // State for CMS products
+  const [products, setProducts] = useState<ProductWithImage[]>([]);
 
   useEffect(() => {
-    fetchProductsWithImages(staticProducts).then((merged) => {
-      if (merged && merged.length > 0) setProducts(merged);
+    fetchProducts().then((fetched) => {
+      if (fetched && fetched.length > 0) setProducts(fetched);
     });
   }, []);
 
-  const filtered = filter === 'all' 
-    ? products 
-    : products.filter(p => {
-        // Try matching by seriesEn first (Sanity data), then fallback
-        const filterName = seriesList.find(s => s.id === filter)?.nameEn || '';
-        return p.seriesEn === filterName || (() => {
-          const seriesMap: Record<string, string[]> = {
-            'ink-dragon': ['sovereign', 'citadel'],
-            'shadow': ['phantom', 'crescent'],
-            'lonely-walker': ['wanderer'],
-            'gothic': ['cathedral'],
-          };
-          return seriesMap[filter]?.includes(p.id);
-        })();
-      });
+  // Dynamic series list from CMS products
+  const allSeries = [...new Set(products.map(p => p.seriesEn).filter(Boolean))];
+
+  const filtered = filter === 'all'
+    ? products
+    : products.filter(p => p.seriesEn === filter);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -124,12 +114,12 @@ export default function CollectionPage() {
               ${filter === 'all' ? 'bg-p-black text-white border-p-black' : 'bg-transparent text-p-dark-gray border-p-light-gray hover:border-p-gold hover:text-p-gold'}`}>
             All Series
           </button>
-          {seriesList.map((s) => (
-            <button key={s.id}
-              onClick={() => setFilter(s.id)}
+          {allSeries.map((seriesName) => (
+            <button key={seriesName}
+              onClick={() => setFilter(seriesName)}
               className={`font-sans text-[0.6875rem] tracking-label uppercase px-5 py-2.5 border cursor-pointer transition-all duration-300
-                ${filter === s.id ? 'bg-p-black text-white border-p-black' : 'bg-transparent text-p-dark-gray border-p-light-gray hover:border-p-gold hover:text-p-gold'}`}>
-              {s.nameEn}
+                ${filter === seriesName ? 'bg-p-black text-white border-p-black' : 'bg-transparent text-p-dark-gray border-p-light-gray hover:border-p-gold hover:text-p-gold'}`}>
+              {seriesName}
             </button>
           ))}
         </div>

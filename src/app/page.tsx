@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { products as staticProducts, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
-import { fetchProductsWithImages } from '@/lib/fetch-data';
+import { craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
+import { fetchProducts } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
-// Extend Product type to include raw image
+// Product type with optional raw image
 interface ProductWithImage {
   id: string;
   name: string;
@@ -27,9 +27,9 @@ interface ProductWithImage {
 
 export default function Home() {
   const fadeRefs = useRef<HTMLElement[]>([]);
-  
-  // State for Sanity-fetched products (with images)
-  const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
+
+  // State for CMS products
+  const [products, setProducts] = useState<ProductWithImage[]>([]);
   const [imagesLoaded, setImagesLoaded] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -49,11 +49,11 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  // Fetch products from Sanity on mount (merges with static data)
+  // Fetch ALL products from CMS on mount
   useEffect(() => {
-    fetchProductsWithImages(staticProducts).then((merged) => {
-      if (merged && merged.length > 0) {
-        setProducts(merged);
+    fetchProducts().then((fetched) => {
+      if (fetched && fetched.length > 0) {
+        setProducts(fetched);
       }
     });
   }, []);
