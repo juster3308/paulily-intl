@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { products as staticProducts, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
-import { fetchProducts } from '@/lib/fetch-data';
+import { fetchProductsWithOverlay } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 // Product type with optional raw image
@@ -49,13 +49,12 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  // Fetch from CMS: overlay images/fields onto static products, append new CMS products
+  // Fetch from CMS: overlay images/text onto static products (never replace)
   useEffect(() => {
-    fetchProducts().then((cmsProducts) => {
-      if (cmsProducts && cmsProducts.length > 0) {
-        setProducts(cmsProducts);
+    fetchProductsWithOverlay(staticProducts).then((merged) => {
+      if (merged && merged.length > 0) {
+        setProducts(merged);
       }
-      // If CMS empty → keep static products as fallback
     });
   }, []);
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { products as staticProducts } from '@/lib/data';
-import { fetchProducts } from '@/lib/fetch-data';
+import { fetchProductsWithOverlay } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 interface ProductWithImage {
@@ -33,8 +33,8 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const [activeTab, setActiveTab] = useState<'specs' | 'story'>('specs');
 
   useEffect(() => {
-    fetchProducts().then((cmsProducts) => {
-      if (cmsProducts && cmsProducts.length > 0) setProducts(cmsProducts);
+    fetchProductsWithOverlay(staticProducts).then((merged) => {
+      if (merged && merged.length > 0) setProducts(merged);
     });
   }, []);
 

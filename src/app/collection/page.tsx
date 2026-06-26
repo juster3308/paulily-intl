@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { products as staticProducts } from '@/lib/data';
-import { fetchProducts } from '@/lib/fetch-data';
+import { products as staticProducts, seriesList } from '@/lib/data';
+import { fetchProductsWithOverlay } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 interface ProductWithImage {
@@ -28,12 +28,12 @@ export default function CollectionPage() {
   const [filter, setFilter] = useState<string>('all');
   const fadeRefs = useRef<HTMLDivElement[]>([]);
 
-  // Start with static (instant render), replace with CMS data
+  // Start with static (instant render), overlay CMS data
   const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
 
   useEffect(() => {
-    fetchProducts().then((cmsProducts) => {
-      if (cmsProducts && cmsProducts.length > 0) setProducts(cmsProducts);
+    fetchProductsWithOverlay(staticProducts).then((merged) => {
+      if (merged && merged.length > 0) setProducts(merged);
     });
   }, []);
 
