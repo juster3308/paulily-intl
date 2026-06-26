@@ -23,7 +23,7 @@ export default function Footer() {
           <ul className="list-none flex flex-col gap-3">
             {seriesList.map((s) => (
               <li key={s.id}>
-                <a href="#collection" className="font-sans text-[0.8125rem] text-white/50 no-underline transition-colors duration-300 hover:text-p-gold">
+                <a href="/collection" className="font-sans text-[0.8125rem] text-white/50 no-underline transition-colors duration-300 hover:text-p-gold">
                   {s.nameEn}
                 </a>
               </li>
@@ -37,10 +37,15 @@ export default function Footer() {
             Company
           </div>
           <ul className="list-none flex flex-col gap-3">
-            {['Heritage', 'Craftsmanship', 'Wholesale', 'Press'].map((item) => (
-              <li key={item}>
-                <a href="#" className="font-sans text-[0.8125rem] text-white/50 no-underline transition-colors duration-300 hover:text-p-gold">
-                  {item}
+            {[
+              { label: 'Heritage', href: '/about' },
+              { label: 'Craftsmanship', href: '/craftsmanship' },
+              { label: 'Wholesale', href: '/contact' },
+              { label: 'Press', href: '/about' },
+            ].map((item) => (
+              <li key={item.label}>
+                <a href={item.href} className="font-sans text-[0.8125rem] text-white/50 no-underline transition-colors duration-300 hover:text-p-gold">
+                  {item.label}
                 </a>
               </li>
             ))}

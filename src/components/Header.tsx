@@ -24,7 +24,7 @@ export default function Header() {
       <ul className="hidden md:flex gap-9 items-center list-none">
         {['Collection', 'Craftsmanship', 'Heritage', 'Wholesale'].map((item) => (
           <li key={item}>
-            <a href={`#${item.toLowerCase()}`}
+            <a href={`/#${item.toLowerCase()}`}
               className="font-sans text-[0.75rem] tracking-nav uppercase text-p-dark-gray no-underline font-medium
                 relative pb-0.5 transition-colors duration-300 hover:text-p-black
                 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-p-gold
@@ -35,7 +35,7 @@ export default function Header() {
         ))}
       </ul>
 
-      <a href="#inquiry" className="hidden md:inline-block font-sans text-[0.6875rem] tracking-[0.14em] uppercase bg-p-black text-p-pure-white py-2.5 px-6 border-none cursor-pointer font-medium no-underline transition-all duration-300 hover:bg-p-gold hover:text-p-black">
+      <a href="/#inquiry" className="hidden md:inline-block font-sans text-[0.6875rem] tracking-[0.14em] uppercase bg-p-black text-p-pure-white py-2.5 px-6 border-none cursor-pointer font-medium no-underline transition-all duration-300 hover:bg-p-gold hover:text-p-black">
         Request Catalog
       </a>
 
