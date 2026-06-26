@@ -48,24 +48,44 @@ export async function fetchProducts(): Promise<Product[]> {
       return []; // Empty → caller will keep static fallback
     }
 
-    return results.map((doc) => ({
-      id: doc.slug?.current || doc._id.replace('product-', '').replace('drafts.', ''),
-      name: doc.name || '',
-      nameEn: doc.nameEn || '',
-      series: doc.series || '',
-      seriesEn: doc.seriesEn || '',
-      priceUnit: '',
-      priceRange: doc.priceRange || '',
-      material: doc.material || '',
-      materialEn: doc.materialEn || '',
-      description: '',
-      descriptionEn: doc.descriptionEn || '',
-      dimensions: '',
-      moq: 0,
-      image: doc.image ? urlFor(doc.image).url() : '',
-      features: [],
-      ...(doc.image ? { _rawImage: doc.image } : {}),
-    }));
+    const products: Product[] = [];
+
+    for (const doc of results) {
+      // Build image URL
+      let imageUrl = '';
+      let rawImage: any = undefined;
+
+      try {
+        if (doc.image && urlFor(doc.image)) {
+          rawImage = doc.image;
+          imageUrl = urlFor(doc.image).width(600).height(800).fit('crop').quality(90).url() || '';
+        }
+      } catch (imgErr) {
+        console.warn('Failed to build image URL for', doc.nameEn, imgErr);
+        imageUrl = '';
+      }
+
+      products.push({
+        id: doc.slug?.current || doc._id.replace('product-', '').replace('drafts.', ''),
+        name: doc.name || '',
+        nameEn: doc.nameEn || '',
+        series: doc.series || '',
+        seriesEn: doc.seriesEn || '',
+        priceUnit: '',
+        priceRange: doc.priceRange || '',
+        material: doc.material || '',
+        materialEn: doc.materialEn || '',
+        description: '',
+        descriptionEn: doc.descriptionEn || '',
+        dimensions: '',
+        moq: 0,
+        image: imageUrl,
+        features: [],
+        ...(rawImage ? { _rawImage: rawImage } : {}),
+      });
+    }
+
+    return products;
   } catch (err) {
     console.warn('Sanity fetch failed:', err);
     return [];

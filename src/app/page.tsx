@@ -49,7 +49,7 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  // Fetch from CMS: if CMS has products → completely replace static
+  // Fetch from CMS: overlay images/fields onto static products, append new CMS products
   useEffect(() => {
     fetchProducts().then((cmsProducts) => {
       if (cmsProducts && cmsProducts.length > 0) {
