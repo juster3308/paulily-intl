@@ -148,16 +148,10 @@ export default function Home() {
             <a href="#inquiry" className="btn-secondary">Wholesale Inquiry</a>
           </div>
         </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-p-silver text-[0.625rem] tracking-wide uppercase font-sans">
-          <span>Scroll</span>
-          <div className="w-[1px] h-10 bg-gradient-to-b from-p-silver to-transparent animate-[scrollPulse_2s_ease-in-out_infinite]" />
-        </div>
       </section>
 
       {/* ══════════ COLLECTION ══════════ */}
-      <section id="collection" className="section">
+      <section id="collection" className="pt-[clamp(48px,6vw,80px)] px-[clamp(24px,4vw,80px)] pb-[clamp(80px,10vw,140px)]">
         <div ref={addFadeRef} className="text-center max-w-[600px] mx-auto mb-[clamp(48px,6vw,80px)] fade-in">
           <span className="label block mb-4">The Collection</span>
           <div className="divider mx-auto my-4" />
