@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { products as staticProducts, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
+import { products as staticProducts, seriesList, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
 import { fetchProductsWithOverlay } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
@@ -30,7 +30,6 @@ export default function Home() {
 
   // Start with static products (instant render), then replace with CMS data
   const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
-  const [imagesLoaded, setImagesLoaded] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -64,26 +63,36 @@ export default function Home() {
     }
   };
 
-  // Render product image - real image from Sanity or SVG fallback
-  const renderProductImage = (product: ProductWithImage) => {
-    const hasRealImage = product._rawImage || (product.image && !product.image.startsWith('/'));
-    
+  // Build series cards: for each series, find the first product's image as cover
+  const seriesCards = seriesList.map(s => {
+    const firstProduct = products.find(p => p.seriesEn === s.nameEn);
+    return {
+      ...s,
+      image: firstProduct?.image || '',
+      _rawImage: firstProduct?._rawImage,
+      productCount: products.filter(p => p.seriesEn === s.nameEn).length,
+    };
+  });
+
+  // Render series image - real image from Sanity or SVG fallback
+  const renderSeriesImage = (card: typeof seriesCards[0]) => {
+    const hasRealImage = card._rawImage || (card.image && !card.image.startsWith('/'));
+
     if (hasRealImage) {
-      const imgUrl = product._rawImage 
-        ? urlFor(product._rawImage).width(600).height(800).fit('crop').quality(90).url()
-        : product.image;
-      
+      const imgUrl = card._rawImage
+        ? urlFor(card._rawImage).width(600).height(800).fit('crop').quality(90).url()
+        : card.image;
+
       return (
         <img
           src={imgUrl}
-          alt={product.nameEn}
+          alt={card.nameEn}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
           loading="lazy"
-          onLoad={(e) => setImagesLoaded(prev => ({ ...prev, [product.id]: true }))}
         />
       );
     }
-    
+
     // SVG fallback (no image in Sanity)
     return (
       <svg width="120" height="160" viewBox="0 0 120 160" fill="none" className="transition-transform duration-500 group-hover:scale-[1.05]">
@@ -140,38 +149,35 @@ export default function Home() {
             Quiet Precision
           </h2>
           <p className="font-accent text-[1.125rem] font-light italic text-p-mid-gray leading-[1.7]">
-            Six signature silhouettes — each defined by restraint, structure, and the quiet confidence of exceptional material.
+            Four signature series — each defined by a distinct design language. Explore the full catalog within each collection.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[clamp(20px,3vw,40px)] max-w-[1200px] mx-auto">
-          {products.map((product) => (
-            <a key={product.id} href={`/collection/${product.id}`} ref={addFadeRef} className="fade-in group relative overflow-hidden bg-p-off-white cursor-pointer transition-transform duration-300 hover:-translate-y-1 no-underline text-p-black block">
-              {/* Product image - REAL IMAGE FROM SANITY OR SVG FALLBACK */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[clamp(20px,3vw,40px)] max-w-[1000px] mx-auto">
+          {seriesCards.map((series) => (
+            <a key={series.id} href={`/collection?filter=${encodeURIComponent(series.nameEn)}`} ref={addFadeRef} className="fade-in group relative overflow-hidden bg-p-off-white cursor-pointer transition-transform duration-300 hover:-translate-y-1 no-underline text-p-black block">
+              {/* Series image - REAL IMAGE FROM SANITY OR SVG FALLBACK */}
               <div className="aspect-[3/4] bg-p-cream flex items-center justify-center overflow-hidden relative">
-                {renderProductImage(product)}
-                
+                {renderSeriesImage(series)}
+
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/0 flex items-center justify-center transition-[background] duration-300 group-hover:bg-[rgba(10,10,10,0.15)]">
                   <span className="font-sans text-[0.6875rem] tracking-label uppercase text-white opacity-0 translate-y-2 transition-all duration-300 font-medium py-2.5 px-6 border border-white/60 group-hover:opacity-100 group-hover:translate-y-0">
-                    View Details
+                    Explore Series
                   </span>
                 </div>
               </div>
 
-              {/* Product info */}
+              {/* Series info */}
               <div className="p-5 pb-6">
-                <span className="font-sans text-[0.625rem] tracking-[0.22em] uppercase text-p-gold font-medium mb-1.5 block">
-                  {product.seriesEn}
-                </span>
-                <h3 className="font-serif text-[1.125rem] font-medium tracking-[0.02em] mb-1.5">
-                  {product.nameEn}
+                <h3 className="font-serif text-[1.25rem] font-medium tracking-[0.04em] mb-2">
+                  {series.nameEn}
                 </h3>
-                <p className="font-sans text-sm text-p-mid-gray font-normal">
-                  {product.priceRange}
+                <p className="font-accent text-sm text-p-mid-gray italic leading-[1.7]">
+                  {series.descriptionEn}
                 </p>
-                <p className="font-accent text-xs text-p-silver italic mt-1">
-                  {product.materialEn}
+                <p className="font-sans text-[0.625rem] tracking-wide uppercase text-p-gold mt-3">
+                  {series.productCount} {series.productCount === 1 ? 'Product' : 'Products'}
                 </p>
               </div>
             </a>

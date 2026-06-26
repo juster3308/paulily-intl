@@ -31,6 +31,13 @@ export default function CollectionPage() {
   // Start with static (instant render), overlay CMS data
   const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
 
+  // Read filter from URL query param on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlFilter = params.get('filter');
+    if (urlFilter) setFilter(urlFilter);
+  }, []);
+
   useEffect(() => {
     fetchProductsWithOverlay(staticProducts).then((merged) => {
       if (merged && merged.length > 0) setProducts(merged);
