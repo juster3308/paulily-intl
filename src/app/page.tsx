@@ -86,7 +86,7 @@ export default function Home() {
 
     if (hasRealImage) {
       const imgUrl = card._rawImage
-        ? urlFor(card._rawImage).width(600).height(800).fit('crop').quality(90).url()
+        ? urlFor(card._rawImage).width(400).height(400).fit('crop').quality(90).url()
         : card.image;
 
       return (
@@ -99,12 +99,12 @@ export default function Home() {
       );
     }
 
-    // SVG fallback (no image in Sanity)
+    // SVG fallback (no image in Sanity) — compact
     return (
-      <svg width="120" height="160" viewBox="0 0 120 160" fill="none" className="transition-transform duration-500 group-hover:scale-[1.05]">
-        <rect x="20" y="30" width="80" height="110" rx="8" stroke="#C9A84C" strokeWidth="1" fill="none"/>
-        <path d="M30 30 Q60 5 90 30" stroke="#C9A84C" strokeWidth="1" fill="none"/>
-        <rect x="50" y="50" width="20" height="24" rx="3" stroke="#3A3A3A" strokeWidth="0.5" fill="none"/>
+      <svg width="80" height="100" viewBox="0 0 80 100" fill="none" className="transition-transform duration-500 group-hover:scale-[1.05]">
+        <rect x="12" y="18" width="56" height="70" rx="5" stroke="#C9A84C" strokeWidth="1" fill="none"/>
+        <path d="M20 18 Q40 0 60 18" stroke="#C9A84C" strokeWidth="1" fill="none"/>
+        <rect x="34" y="32" width="12" height="16" rx="2" stroke="#3A3A3A" strokeWidth="0.5" fill="none"/>
       </svg>
     );
   };
@@ -155,34 +155,34 @@ export default function Home() {
             Quiet Precision
           </h2>
           <p className="font-accent text-[1.125rem] font-light italic text-p-mid-gray leading-[1.7]">
-            Four signature series — each defined by a distinct design language. Explore the full catalog within each collection.
+            Five signature series — each defined by a distinct design language. Explore the full catalog within each collection.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-[clamp(20px,3vw,40px)] max-w-[1000px] mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-[1200px] mx-auto">
           {seriesCards.map((series) => (
             <a key={series.id} href={`/collection?filter=${encodeURIComponent(series.nameEn)}`} ref={addFadeRef} className="fade-in group relative overflow-hidden bg-p-off-white cursor-pointer transition-transform duration-300 hover:-translate-y-1 no-underline text-p-black block">
-              {/* Series image - REAL IMAGE FROM SANITY OR SVG FALLBACK */}
-              <div className="aspect-[3/4] bg-p-cream flex items-center justify-center overflow-hidden relative">
+              {/* Series image - compact */}
+              <div className="aspect-square bg-p-cream flex items-center justify-center overflow-hidden relative p-6">
                 {renderSeriesImage(series)}
 
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/0 flex items-center justify-center transition-[background] duration-300 group-hover:bg-[rgba(10,10,10,0.15)]">
-                  <span className="font-sans text-[0.6875rem] tracking-label uppercase text-white opacity-0 translate-y-2 transition-all duration-300 font-medium py-2.5 px-6 border border-white/60 group-hover:opacity-100 group-hover:translate-y-0">
-                    Explore Series
+                  <span className="font-sans text-[0.625rem] tracking-label uppercase text-white opacity-0 translate-y-2 transition-all duration-300 font-medium py-2 px-4 border border-white/60 group-hover:opacity-100 group-hover:translate-y-0">
+                    Explore
                   </span>
                 </div>
               </div>
 
-              {/* Series info */}
-              <div className="p-5 pb-6">
-                <h3 className="font-serif text-[1.25rem] font-medium tracking-[0.04em] mb-2">
+              {/* Series info — compact */}
+              <div className="p-4 pb-5">
+                <h3 className="font-serif text-[0.9375rem] font-medium tracking-[0.04em] mb-1.5">
                   {series.nameEn}
                 </h3>
-                <p className="font-accent text-sm text-p-mid-gray italic leading-[1.7]">
+                <p className="font-accent text-xs text-p-mid-gray italic leading-[1.6] line-clamp-2">
                   {series.descriptionEn}
                 </p>
-                <p className="font-sans text-[0.625rem] tracking-wide uppercase text-p-gold mt-3">
+                <p className="font-sans text-[0.625rem] tracking-wide uppercase text-p-gold mt-2">
                   {series.productCount} {series.productCount === 1 ? 'Product' : 'Products'}
                 </p>
               </div>
