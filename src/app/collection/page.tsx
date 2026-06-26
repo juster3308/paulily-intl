@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { products as staticProducts, seriesList } from '@/lib/data';
-import { fetchProductsWithImages } from '@/lib/fetch-data';
+import { products as staticProducts } from '@/lib/data';
+import { fetchProducts } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 interface ProductWithImage {
@@ -28,18 +28,17 @@ export default function CollectionPage() {
   const [filter, setFilter] = useState<string>('all');
   const fadeRefs = useRef<HTMLDivElement[]>([]);
 
-  // Start with static products, overlay Sanity data
+  // Start with static (instant render), replace with CMS data
   const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
 
   useEffect(() => {
-    fetchProductsWithImages(staticProducts).then((merged) => {
-      if (merged && merged.length > 0) setProducts(merged);
+    fetchProducts().then((cmsProducts) => {
+      if (cmsProducts && cmsProducts.length > 0) setProducts(cmsProducts);
     });
   }, []);
 
-  // Series filter: static seriesList + any new series from CMS
-  const cmsSeries = Array.from(new Set(products.map(p => p.seriesEn).filter(Boolean)));
-  const allSeriesNames = Array.from(new Set([...seriesList.map(s => s.nameEn), ...cmsSeries]));
+  // Series filter: auto-generated from whatever products exist
+  const allSeriesNames = Array.from(new Set(products.map(p => p.seriesEn).filter(Boolean)));
 
   const filtered = filter === 'all'
     ? products

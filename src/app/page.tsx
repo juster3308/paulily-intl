@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { products as staticProducts, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
-import { fetchProductsWithImages } from '@/lib/fetch-data';
+import { fetchProducts } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 // Product type with optional raw image
@@ -28,7 +28,7 @@ interface ProductWithImage {
 export default function Home() {
   const fadeRefs = useRef<HTMLElement[]>([]);
 
-  // Start with static products, then overlay Sanity data
+  // Start with static products (instant render), then replace with CMS data
   const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
   const [imagesLoaded, setImagesLoaded] = useState<Record<string, boolean>>({});
 
@@ -49,12 +49,13 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  // Fetch Sanity data and merge with static products
+  // Fetch from CMS: if CMS has products → completely replace static
   useEffect(() => {
-    fetchProductsWithImages(staticProducts).then((merged) => {
-      if (merged && merged.length > 0) {
-        setProducts(merged);
+    fetchProducts().then((cmsProducts) => {
+      if (cmsProducts && cmsProducts.length > 0) {
+        setProducts(cmsProducts);
       }
+      // If CMS empty → keep static products as fallback
     });
   }, []);
 
