@@ -134,7 +134,7 @@ export default function ContactPage() {
                 <select className="form-select">
                   <option value="">Select product category</option>
                   <option>Full Collection</option>
-                  <option>INK DRAGON Series</option>
+                  <option>GUOCHAO Series</option>
                   <option>Shadow Series</option>
                   <option>Lonely Walker Series</option>
                   <option>Gothic Series</option>
