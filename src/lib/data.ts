@@ -150,6 +150,8 @@ export interface Series {
   nameEn: string;
   description: string;
   descriptionEn: string;
+  image?: string;          // Series cover image URL (from CMS or static)
+  _rawImage?: any;         // Raw Sanity image object for urlFor()
 }
 
 export const seriesList: Series[] = [

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { products as staticProducts, seriesList } from '@/lib/data';
-import { fetchProductsWithOverlay } from '@/lib/fetch-data';
+import { products as staticProducts, seriesList as staticSeriesList, Series } from '@/lib/data';
+import { fetchProductsWithOverlay, fetchSeriesWithOverlay } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 interface ProductWithImage {
@@ -30,6 +30,7 @@ export default function CollectionPage() {
 
   // Start with static (instant render), overlay CMS data
   const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
+  const [seriesData, setSeriesData] = useState<Series[]>(staticSeriesList);
 
   // Read filter from URL query param on mount
   useEffect(() => {
@@ -42,10 +43,13 @@ export default function CollectionPage() {
     fetchProductsWithOverlay(staticProducts).then((merged) => {
       if (merged && merged.length > 0) setProducts(merged);
     });
+    fetchSeriesWithOverlay(staticSeriesList).then((merged) => {
+      if (merged && merged.length > 0) setSeriesData(merged);
+    });
   }, []);
 
-  // Series filter: auto-generated from whatever products exist
-  const allSeriesNames = Array.from(new Set(products.map(p => p.seriesEn).filter(Boolean)));
+  // Series filter buttons: use CMS-driven series data (ordered, with descriptions)
+  const allSeriesNames = seriesData.map(s => s.nameEn);
 
   const filtered = filter === 'all'
     ? products

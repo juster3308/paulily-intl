@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { products as staticProducts, seriesList, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
-import { fetchProductsWithOverlay } from '@/lib/fetch-data';
+import { products as staticProducts, seriesList as staticSeriesList, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
+import { Series } from '@/lib/data';
+import { fetchProductsWithOverlay, fetchSeriesWithOverlay } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 // Product type with optional raw image
@@ -30,6 +31,7 @@ export default function Home() {
 
   // Start with static products (instant render), then replace with CMS data
   const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
+  const [seriesData, setSeriesData] = useState<Series[]>(staticSeriesList);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -55,6 +57,11 @@ export default function Home() {
         setProducts(merged);
       }
     });
+    fetchSeriesWithOverlay(staticSeriesList).then((merged) => {
+      if (merged && merged.length > 0) {
+        setSeriesData(merged);
+      }
+    });
   }, []);
 
   const addFadeRef = (el: HTMLElement | null) => {
@@ -63,19 +70,22 @@ export default function Home() {
     }
   };
 
-  // Build series cards: for each series, find the first product's image as cover
-  const seriesCards = seriesList.map(s => {
-    // Find first product of this series that has a real image
+  // Build series cards: CMS series data + product count
+  const seriesCards = seriesData.map(s => {
+    // If series has a direct CMS cover image, use it
+    // Otherwise find the first product of this series that has a real image
+    const hasSeriesImage = s._rawImage || (s.image && !s.image.startsWith('/'));
+    
     const firstProductWithImage = products.find(p =>
       p.seriesEn === s.nameEn &&
       (p._rawImage || (p.image && !p.image.startsWith('/')))
     );
-    const firstProductAny = products.find(p => p.seriesEn === s.nameEn);
 
     return {
       ...s,
-      image: firstProductWithImage?.image || firstProductAny?.image || '',
-      _rawImage: firstProductWithImage?._rawImage,
+      // Prefer series-level image, fallback to first product's image
+      image: hasSeriesImage ? (s.image || '') : (firstProductWithImage?.image || ''),
+      _rawImage: hasSeriesImage ? s._rawImage : firstProductWithImage?._rawImage,
       productCount: products.filter(p => p.seriesEn === s.nameEn).length,
     };
   });

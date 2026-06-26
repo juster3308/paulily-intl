@@ -1,5 +1,5 @@
 import { sanityClient, urlFor } from './sanity';
-import { Product } from './data';
+import { Product, Series } from './data';
 
 // Sanity document types
 interface SanityProduct {
@@ -131,5 +131,105 @@ export async function fetchProductsWithOverlay(staticProducts: Product[]): Promi
   } catch (err) {
     console.warn('Sanity fetch failed, using static data:', err);
     return staticProducts;
+  }
+}
+
+// ═══════════════════════════════════════════
+// Series fetch with overlay
+// ═══════════════════════════════════════════
+
+// Sanity series document types
+interface SanitySeries {
+  _id: string;
+  name?: string;
+  nameEn?: string;
+  description?: string;
+  descriptionEn?: string;
+  image?: any;
+}
+
+/**
+ * Fetch series from Sanity and MERGE with static fallback.
+ * 
+ * Strategy: overlay pattern — match by nameEn:
+ * 1. Static series ALWAYS display as baseline
+ * 2. CMS series overlay data onto matching static series (by nameEn)
+ * 3. Extra CMS series (new nameEn) get appended
+ * 4. If CMS is empty/offline → pure static data shows
+ */
+export async function fetchSeriesWithOverlay(staticSeries: Series[]): Promise<Series[]> {
+  try {
+    const query = `*[_type == "series"] | order(_createdAt asc) {
+      _id,
+      name,
+      nameEn,
+      description,
+      descriptionEn,
+      image
+    }`;
+
+    const results: SanitySeries[] = await sanityClient.fetch(query);
+
+    if (!results || results.length === 0) {
+      return staticSeries;
+    }
+
+    // Build image URLs for CMS series
+    const cmsSeriesWithImages: (SanitySeries & { imageUrl: string; rawImage?: any })[] = [];
+    
+    for (const doc of results) {
+      let imageUrl = '';
+      let rawImage: any = undefined;
+      
+      try {
+        if (doc.image && urlFor(doc.image)) {
+          rawImage = doc.image;
+          imageUrl = urlFor(doc.image).width(400).height(400).fit('crop').quality(90).url() || '';
+        }
+      } catch (imgErr) {
+        console.warn('Series image URL build failed for', doc.nameEn, imgErr);
+        imageUrl = '';
+      }
+
+      cmsSeriesWithImages.push({ ...doc, imageUrl, ...(rawImage ? { rawImage } : {}) });
+    }
+
+    // Clone static series as base
+    const merged = [...staticSeries];
+
+    // Overlay: match CMS series to static series by nameEn
+    for (const cms of cmsSeriesWithImages) {
+      const matchIndex = merged.findIndex(s => s.nameEn === cms.nameEn);
+      
+      if (matchIndex >= 0) {
+        // Overlay onto matching static series
+        if (cms.name) merged[matchIndex].name = cms.name;
+        if (cms.nameEn) merged[matchIndex].nameEn = cms.nameEn;
+        if (cms.description) merged[matchIndex].description = cms.description;
+        if (cms.descriptionEn) merged[matchIndex].descriptionEn = cms.descriptionEn;
+        if (cms.imageUrl) merged[matchIndex].image = cms.imageUrl;
+        if (cms.rawImage) merged[matchIndex]._rawImage = cms.rawImage;
+      } else {
+        // New series not in static list — append it
+        const slugId = cms.nameEn
+          ? cms.nameEn.toLowerCase().replace(/\s+/g, '-')
+          : cms._id.replace('series-', '').replace('drafts.', '');
+        merged.push({
+          id: slugId,
+          name: cms.name || '',
+          nameEn: cms.nameEn || '',
+          description: cms.description || '',
+          descriptionEn: cms.descriptionEn || '',
+          image: cms.imageUrl,
+          _rawImage: cms.rawImage,
+        });
+      }
+    }
+
+    return merged;
+    
+  } catch (err) {
+    console.warn('Sanity series fetch failed, using static data:', err);
+    return staticSeries;
   }
 }
