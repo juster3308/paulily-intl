@@ -18,6 +18,7 @@ export interface Product {
   moq: number;             // Minimum order quantity
   image: string;
   features: string[];
+  storyEn?: string;        // Full story text for STORY tab (CMS-driven)
 }
 
 export const products: Product[] = [

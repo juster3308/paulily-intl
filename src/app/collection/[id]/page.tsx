@@ -21,6 +21,7 @@ interface ProductWithImage {
   moq: number;
   image: string;
   features: string[];
+  storyEn?: string;
   _rawImage?: any;
 }
 
@@ -143,12 +144,22 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
             {activeTab === 'story' && (
               <div>
-                <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8]">
-                  {product.descriptionEn || `The ${product.nameEn} represents the pinnacle of ${product.seriesEn} craftsmanship.`}
-                </p>
-                <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8] mt-4">
-                  Each {product.nameEn} undergoes 47 hand-crafted steps before leaving our Shanghai workshop. From material selection through seven-stage edge polishing, every detail is a commitment to excellence without compromise.
-                </p>
+                {product.storyEn ? (
+                  /* CMS-driven full story */
+                  <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8]">
+                    {product.storyEn}
+                  </p>
+                ) : (
+                  /* Fallback: descriptionEn + generic workshop text */
+                  <>
+                    <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8]">
+                      {product.descriptionEn || `The ${product.nameEn} represents the pinnacle of ${product.seriesEn} craftsmanship.`}
+                    </p>
+                    <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8] mt-4">
+                      Each {product.nameEn} undergoes 47 hand-crafted steps before leaving our Shanghai workshop. From material selection through seven-stage edge polishing, every detail is a commitment to excellence without compromise.
+                    </p>
+                  </>
+                )}
               </div>
             )}
 

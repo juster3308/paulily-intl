@@ -13,6 +13,10 @@ interface SanityProduct {
   material?: string;
   materialEn?: string;
   descriptionEn?: string;
+  dimensions?: string;
+  features?: string[];
+  moq?: number;
+  storyEn?: string;
   image?: any;
 }
 
@@ -38,6 +42,10 @@ export async function fetchProductsWithOverlay(staticProducts: Product[]): Promi
       material,
       materialEn,
       descriptionEn,
+      dimensions,
+      features,
+      moq,
+      storyEn,
       image
     }`;
 
@@ -82,6 +90,10 @@ export async function fetchProductsWithOverlay(staticProducts: Product[]): Promi
       if (cms.priceRange) merged[i].priceRange = cms.priceRange;
       if (cms.materialEn) merged[i].materialEn = cms.materialEn;
       if (cms.descriptionEn) merged[i].descriptionEn = cms.descriptionEn;
+      if (cms.dimensions) merged[i].dimensions = cms.dimensions;
+      if (cms.features && cms.features.length > 0) merged[i].features = cms.features;
+      if (cms.moq) merged[i].moq = cms.moq;
+      if (cms.storyEn) merged[i].storyEn = cms.storyEn;
 
       // Image overlay — this is what user cares about most!
       if (cms.imageUrl) {
@@ -105,10 +117,11 @@ export async function fetchProductsWithOverlay(staticProducts: Product[]): Promi
           materialEn: cms.materialEn || '',
           description: '',
           descriptionEn: cms.descriptionEn || '',
-          dimensions: '',
-          moq: 0,
+          dimensions: cms.dimensions || '',
+          moq: cms.moq || 0,
           image: cms.imageUrl,
-          features: [],
+          features: cms.features || [],
+          storyEn: cms.storyEn || '',
         });
       }
     }
