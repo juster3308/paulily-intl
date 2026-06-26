@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { fetchProducts } from '@/lib/fetch-data';
+import { products as staticProducts, seriesList } from '@/lib/data';
+import { fetchProductsWithImages } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
 
 interface ProductWithImage {
@@ -27,17 +28,18 @@ export default function CollectionPage() {
   const [filter, setFilter] = useState<string>('all');
   const fadeRefs = useRef<HTMLDivElement[]>([]);
 
-  // State for CMS products
-  const [products, setProducts] = useState<ProductWithImage[]>([]);
+  // Start with static products, overlay Sanity data
+  const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
 
   useEffect(() => {
-    fetchProducts().then((fetched) => {
-      if (fetched && fetched.length > 0) setProducts(fetched);
+    fetchProductsWithImages(staticProducts).then((merged) => {
+      if (merged && merged.length > 0) setProducts(merged);
     });
   }, []);
 
-  // Dynamic series list from CMS products
-  const allSeries = [...new Set(products.map(p => p.seriesEn).filter(Boolean))];
+  // Series filter: static seriesList + any new series from CMS
+  const cmsSeries = [...new Set(products.map(p => p.seriesEn).filter(Boolean))];
+  const allSeriesNames = [...new Set([...seriesList.map(s => s.nameEn), ...cmsSeries])];
 
   const filtered = filter === 'all'
     ? products
@@ -114,7 +116,7 @@ export default function CollectionPage() {
               ${filter === 'all' ? 'bg-p-black text-white border-p-black' : 'bg-transparent text-p-dark-gray border-p-light-gray hover:border-p-gold hover:text-p-gold'}`}>
             All Series
           </button>
-          {allSeries.map((seriesName) => (
+          {allSeriesNames.map((seriesName) => (
             <button key={seriesName}
               onClick={() => setFilter(seriesName)}
               className={`font-sans text-[0.6875rem] tracking-label uppercase px-5 py-2.5 border cursor-pointer transition-all duration-300
