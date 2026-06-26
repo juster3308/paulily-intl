@@ -124,6 +124,23 @@ export const products: Product[] = [
     image: '/images/citadel.jpg',
     features: ['Saffiano crosshatch leather', 'Gold-tone turn-lock', 'Double compartment interior', 'Detachable shoulder strap', 'Scratch-resistant surface'],
   },
+  {
+    id: 'doodles',
+    name: '涂鸦',
+    nameEn: 'The Doodles',
+    series: '涂鸦',
+    seriesEn: 'GRAFFITI',
+    priceUnit: '¥2,800',
+    priceRange: 'From ¥2,800 / Unit',
+    material: 'PVC/PU涂层帆布',
+    materialEn: 'PVC/PU coated canvas · Spray-paint hardware',
+    description: '涂鸦系列的代表作。手绘涂鸦覆盖皮革表面，拒绝致敬与重复——每一只都是独一无二的叛逆宣言。',
+    descriptionEn: 'The defining piece of GRAFFITI. Hand-painted strokes over leather — refusing tribute, refusing repetition. Each bag is a one-of-a-kind declaration of rebellion.',
+    dimensions: '32 × 24 × 11 cm',
+    moq: 60,
+    image: '/images/doodles.jpg',
+    features: ['PVC/PU coated canvas', 'Hand-painted graffiti overlay', 'Spray-paint-effect hardware', 'Raw-cut edges', 'Unique per piece — no two identical'],
+  },
 ];
 
 // Series data for filtering
@@ -163,6 +180,13 @@ export const seriesList: Series[] = [
     nameEn: 'GOTHIC',
     description: '建筑与意志的交汇',
     descriptionEn: 'Where architecture and will intersect — structural drama in every stitch.',
+  },
+  {
+    id: 'graffiti',
+    name: '涂鸦',
+    nameEn: 'GRAFFITI',
+    description: '国潮叛逆 · 不致敬超越',
+    descriptionEn: 'NOT OBEDIENT — Chinese street culture meets leather craft. Rebel spirit, raw energy, no rules.',
   },
 ];
 
