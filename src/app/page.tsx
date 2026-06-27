@@ -384,7 +384,7 @@ export default function Home() {
                   <option>Select product category</option>
                   <option>Full Collection</option>
                   <option>GUOCHAO Series</option>
-                  <option>Shadow Series</option>
+                  <option>Classic Series</option>
                   <option>Lonely Walker Series</option>
                   <option>Gothic Series</option>
                   <option>Custom / Private Label</option>
