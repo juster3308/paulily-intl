@@ -25,8 +25,11 @@ interface SanityProduct {
  * 
  * Strategy:
  * 1. Static products ALWAYS display as baseline (never blank page)
- * 2. CMS products overlay images + text onto matching static products
- * 3. Extra CMS products (beyond the 6 static ones) get appended
+ * 2. CMS products overlay onto matching static products by: seriesEn + nameEn
+ *    - If a CMS product has the same seriesEn AND nameEn as a static product,
+ *      it replaces that static product's image/text (ideal for editing existing items)
+ * 3. CMS products that don't match any static product are APPENDED as new products
+ *    - This lets you add unlimited products per series with unique names/slugs
  * 4. If CMS is empty/offline → pure static data shows
  */
 export async function fetchProductsWithOverlay(staticProducts: Product[]): Promise<Product[]> {
@@ -78,33 +81,39 @@ export async function fetchProductsWithOverlay(staticProducts: Product[]): Promi
     // Clone static products as base
     const merged = [...staticProducts];
 
-    // Overlay: for each CMS product, find matching static product by position
-    // Position-based matching is most reliable — user's 1st CMS product → overlays 1st static product, etc.
-    for (let i = 0; i < cmsProductsWithImages.length && i < merged.length; i++) {
-      const cms = cmsProductsWithImages[i];
+    // Overlay / append CMS products by matching seriesEn + nameEn
+    for (const cms of cmsProductsWithImages) {
       if (!cms) continue;
 
-      // Overlay CMS fields onto static product
-      if (cms.nameEn) merged[i].nameEn = cms.nameEn;
-      if (cms.seriesEn) merged[i].seriesEn = cms.seriesEn;
-      if (cms.priceRange) merged[i].priceRange = cms.priceRange;
-      if (cms.materialEn) merged[i].materialEn = cms.materialEn;
-      if (cms.descriptionEn) merged[i].descriptionEn = cms.descriptionEn;
-      if (cms.dimensions) merged[i].dimensions = cms.dimensions;
-      if (cms.features && cms.features.length > 0) merged[i].features = cms.features;
-      if (cms.moq) merged[i].moq = cms.moq;
-      if (cms.storyEn) merged[i].storyEn = cms.storyEn;
+      // Try to match an existing static product by series + name
+      const matchIndex = merged.findIndex(
+        p => p.seriesEn === cms.seriesEn && p.nameEn === cms.nameEn
+      );
 
-      // Image overlay — this is what user cares about most!
-      if (cms.imageUrl) {
-        merged[i].image = cms.imageUrl;
-      }
-    }
+      if (matchIndex >= 0) {
+        // --- MATCH FOUND: overlay CMS data onto this static product ---
+        if (cms.name) merged[matchIndex].name = cms.name;
+        if (cms.nameEn) merged[matchIndex].nameEn = cms.nameEn;
+        if (cms.series) merged[matchIndex].series = cms.series;
+        if (cms.seriesEn) merged[matchIndex].seriesEn = cms.seriesEn;
+        if (cms.priceRange) merged[matchIndex].priceRange = cms.priceRange;
+        if (cms.material) merged[matchIndex].material = cms.material;
+        if (cms.materialEn) merged[matchIndex].materialEn = cms.materialEn;
+        if (cms.descriptionEn) merged[matchIndex].descriptionEn = cms.descriptionEn;
+        if (cms.dimensions) merged[matchIndex].dimensions = cms.dimensions;
+        if (cms.features && cms.features.length > 0) merged[matchIndex].features = cms.features;
+        if (cms.moq) merged[matchIndex].moq = cms.moq;
+        if (cms.storyEn) merged[matchIndex].storyEn = cms.storyEn;
 
-    // Append any EXTRA CMS products beyond the 6 static ones
-    if (cmsProductsWithImages.length > staticProducts.length) {
-      for (let i = staticProducts.length; i < cmsProductsWithImages.length; i++) {
-        const cms = cmsProductsWithImages[i];
+        // Image overlay — this is what users care about most!
+        if (cms.imageUrl) {
+          merged[matchIndex].image = cms.imageUrl;
+        }
+        if (cms.rawImage) {
+          merged[matchIndex]._rawImage = cms.rawImage;
+        }
+      } else {
+        // --- NO MATCH: append as a brand new product ---
         merged.push({
           id: cms.slug?.current || cms._id.replace('product-', '').replace('drafts.', ''),
           name: cms.name || '',
@@ -122,6 +131,7 @@ export async function fetchProductsWithOverlay(staticProducts: Product[]): Promi
           image: cms.imageUrl,
           features: cms.features || [],
           storyEn: cms.storyEn || '',
+          _rawImage: cms.rawImage,
         });
       }
     }

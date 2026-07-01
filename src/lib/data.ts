@@ -19,6 +19,7 @@ export interface Product {
   image: string;
   features: string[];
   storyEn?: string;        // Full story text for STORY tab (CMS-driven)
+  _rawImage?: any;         // Sanity image asset reference for urlFor()
 }
 
 export const products: Product[] = [
