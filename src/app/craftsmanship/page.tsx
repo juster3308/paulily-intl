@@ -1,12 +1,27 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { craftSteps } from '@/lib/data';
+import { useEffect, useRef, useState } from 'react';
+import { craftSteps as staticCraftSteps, brandContentData, CraftStep, BrandContent } from '@/lib/data';
+import { fetchCraftStepsWithOverlay, fetchBrandContent } from '@/lib/fetch-data';
+import { urlFor } from '@/lib/sanity';
+import { BrandTitle } from '@/components/BrandText';
 
 export default function CraftsmanshipPage() {
   const fadeRefs = useRef<HTMLDivElement[]>([]);
+  const [craftSteps, setCraftSteps] = useState<CraftStep[]>(staticCraftSteps);
+  const [brandContent, setBrandContent] = useState<Record<string, BrandContent>>(brandContentData);
 
   useEffect(() => {
+    fetchCraftStepsWithOverlay(staticCraftSteps).then((merged) => {
+      if (merged && merged.length > 0) setCraftSteps(merged);
+    });
+    fetchBrandContent(brandContentData).then((merged) => {
+      if (merged) setBrandContent(merged);
+    });
+  }, []);
+
+  useEffect(() => {
+    fadeRefs.current = [];
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -18,24 +33,42 @@ export default function CraftsmanshipPage() {
 
     fadeRefs.current.forEach(el => { if (el) observer.observe(el); });
     return () => observer.disconnect();
-  }, []);
+  }, [craftSteps]);
 
   const addRef = (el: HTMLDivElement | null) => {
     if (el && !fadeRefs.current.includes(el)) fadeRefs.current.push(el);
   };
+
+  const renderStepImage = (step: CraftStep) => {
+    if (step._rawImage) {
+      return (
+        <img
+          src={urlFor(step._rawImage).width(600).height(400).fit('crop').quality(90).url()}
+          alt={step.titleEn}
+          className="w-full h-full object-cover"
+        />
+      );
+    }
+    if (step.image && !step.image.startsWith('/')) {
+      return <img src={step.image} alt={step.titleEn} className="w-full h-full object-cover" />;
+    }
+    return null;
+  };
+
+  const hero = brandContent['craftsmanship-hero'] || {};
+  const quality = brandContent['craftsmanship-quality'] || {};
 
   return (
     <div className="min-h-screen pt-[72px]">
       {/* Hero */}
       <section className="min-h-[60vh] flex items-center justify-center bg-p-black text-white relative overflow-hidden">
         <div ref={addRef} className="fade-in text-center max-w-[700px] px-6">
-          <span className="label block mb-6 text-p-gold tracking-wide">The Process</span>
+          <span className="label block mb-6 text-p-gold tracking-wide">{hero.labelEn}</span>
           <h1 className="font-serif text-[clamp(2.5rem,5vw,4rem)] font-normal tracking-[-0.03em] leading-[1.1] mb-6">
-            47 Steps.<br/>
-            Zero <em className="font-accent italic text-p-gold font-light">Compromises</em>.
+            <BrandTitle title={hero.titleEn || ''} />
           </h1>
           <p className="font-accent text-[1.125rem] font-light italic text-white/50 leading-[1.7]">
-            From raw hide to finished piece — every PAULILY bag is a testament to patience, precision, and the belief that excellence is never accidental.
+            {hero.bodyEn}
           </p>
         </div>
       </section>
@@ -45,6 +78,11 @@ export default function CraftsmanshipPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-[clamp(24px,3vw,48px)] max-w-[1200px] mx-auto">
           {craftSteps.map((step) => (
             <div key={step.number} ref={addRef} className="craft-card fade-in bg-transparent">
+              {renderStepImage(step) && (
+                <div className="aspect-[3/2] mb-6 overflow-hidden">
+                  {renderStepImage(step)}
+                </div>
+              )}
               <div className="font-serif text-[3rem] font-normal text-p-gold opacity-40 leading-none mb-8">
                 {step.number}
               </div>
@@ -62,10 +100,10 @@ export default function CraftsmanshipPage() {
       {/* Detailed breakdown */}
       <section className="section bg-p-warm-white">
         <div ref={addRef} className="fade-in max-w-[800px] mx-auto">
-          <span className="label block mb-5">Quality Standards</span>
+          <span className="label block mb-5">{quality.labelEn}</span>
           <div className="divider-wide mb-5" />
           <h2 className="font-serif text-[clamp(1.75rem,3vw,2.25rem)] font-normal mb-8">
-            What Sets Us <em className="font-accent italic text-p-gold font-light">Apart</em>
+            <BrandTitle title={quality.titleEn || ''} />
           </h2>
 
           <div className="space-y-8">

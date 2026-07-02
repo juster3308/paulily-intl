@@ -1,12 +1,26 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { heritageStats } from '@/lib/data';
+import { useEffect, useRef, useState } from 'react';
+import { heritageStats as staticHeritageStats, brandContentData, Stat, BrandContent } from '@/lib/data';
+import { fetchStatsWithOverlay, fetchBrandContent } from '@/lib/fetch-data';
+import { BrandTitle, splitBodyParagraphs } from '@/components/BrandText';
 
 export default function AboutPage() {
   const fadeRefs = useRef<HTMLDivElement[]>([]);
+  const [stats, setStats] = useState<Stat[]>(staticHeritageStats);
+  const [brandContent, setBrandContent] = useState<Record<string, BrandContent>>(brandContentData);
 
   useEffect(() => {
+    fetchStatsWithOverlay(staticHeritageStats).then((merged) => {
+      if (merged && merged.length > 0) setStats(merged);
+    });
+    fetchBrandContent(brandContentData).then((merged) => {
+      if (merged) setBrandContent(merged);
+    });
+  }, []);
+
+  useEffect(() => {
+    fadeRefs.current = [];
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -18,11 +32,15 @@ export default function AboutPage() {
 
     fadeRefs.current.forEach(el => { if (el) observer.observe(el); });
     return () => observer.disconnect();
-  }, []);
+  }, [stats]);
 
   const addRef = (el: HTMLDivElement | null) => {
     if (el && !fadeRefs.current.includes(el)) fadeRefs.current.push(el);
   };
+
+  const hero = brandContent['about-hero'] || {};
+  const story = brandContent['about-story'] || {};
+  const values = brandContent['about-values'] || {};
 
   return (
     <div className="min-h-screen pt-[72px]">
@@ -34,13 +52,12 @@ export default function AboutPage() {
           }}
         />
         <div ref={addRef} className="fade-in text-center max-w-[700px] px-6 relative">
-          <span className="label block mb-6">Our Heritage</span>
+          <span className="label block mb-6">{hero.labelEn}</span>
           <h1 className="font-serif text-[clamp(2.5rem,5vw,4rem)] font-normal tracking-[-0.03em] leading-[1.1] mb-6">
-            Born from<br/>
-            <em className="font-accent italic text-p-gold font-light">Conviction</em>
+            <BrandTitle title={hero.titleEn || ''} />
           </h1>
           <p className="font-accent text-[1.125rem] font-light italic text-p-mid-gray leading-[1.7]">
-            PAULILY was founded in Shanghai with a singular belief: that Chinese craftsmanship deserves the same global reverence as its European counterparts.
+            {hero.bodyEn}
           </p>
         </div>
       </section>
@@ -58,27 +75,22 @@ export default function AboutPage() {
           </div>
 
           <div ref={addRef} className="fade-in">
-            <span className="label block mb-5">The Story</span>
+            <span className="label block mb-5">{story.labelEn}</span>
             <div className="divider-wide mb-5" />
             
             <h2 className="font-serif text-[clamp(1.75rem,3vw,2.25rem)] font-normal leading-[1.15] mb-6">
-              We Do Not Imitate.<br/>
-              We <em className="font-accent italic text-p-gold font-light">Originate</em>.
+              <BrandTitle title={story.titleEn || ''} />
             </h2>
 
-            <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8] mb-5">
-              Shanghai, 2024. A group of artisans and designers who had spent decades studying both Eastern traditional craft and Western contemporary design came together with one question: why shouldn&apos;t a Chinese bag brand command the same respect as a Milanese one?
-            </p>
-            <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8] mb-5">
-              The answer wasn&apos;t marketing. It wasn&apos;t storytelling. It was the product itself — every stitch, every edge, every piece of hardware had to be objectively, measurably, undeniably superior. PAULILY was built on that standard.
-            </p>
-            <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8]">
-              Our design philosophy draws from the tension between Eastern aesthetic discipline and Western architectural precision. The result is a product that speaks quietly but carries unmistakable authority.
-            </p>
+            {splitBodyParagraphs(story.bodyEn || '').map((para, i) => (
+              <p key={i} className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8] mb-5 last:mb-0">
+                {para}
+              </p>
+            ))}
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-10 pt-10 border-t border-p-light-gray">
-              {heritageStats.map((stat) => (
+              {stats.map((stat) => (
                 <div key={stat.label}>
                   <div className="font-serif text-[1.75rem] font-normal text-p-gold mb-1">{stat.number}</div>
                   <div className="font-sans text-[0.6875rem] tracking-[0.14em] uppercase text-p-silver font-medium">{stat.label}</div>
@@ -92,10 +104,10 @@ export default function AboutPage() {
       {/* Values */}
       <section className="section bg-p-off-white">
         <div ref={addRef} className="fade-in max-w-[800px] mx-auto text-center">
-          <span className="label block mb-5">Our Values</span>
+          <span className="label block mb-5">{values.labelEn}</span>
           <div className="divider mx-auto mb-5" />
           <h2 className="font-serif text-[clamp(1.75rem,3vw,2.25rem)] font-normal mb-12">
-            Three <em className="font-accent italic text-p-gold font-light">Commitments</em>
+            <BrandTitle title={values.titleEn || ''} />
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

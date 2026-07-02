@@ -183,6 +183,8 @@ export interface CraftStep {
   titleEn: string;
   description: string;
   descriptionEn: string;
+  image?: string;
+  _rawImage?: any;
 }
 
 export const craftSteps: CraftStep[] = [
@@ -210,11 +212,83 @@ export const craftSteps: CraftStep[] = [
 ];
 
 // Heritage stats
-export const heritageStats = [
+export interface Stat {
+  number: string;
+  label: string;
+  labelZh: string;
+}
+
+export const heritageStats: Stat[] = [
   { number: '47', label: 'Steps Per Piece', labelZh: '每件工序' },
   { number: '12+', label: 'Countries', labelZh: '覆盖国家' },
   { number: '98%', label: 'Repeat Orders', labelZh: '复购率' },
 ];
+
+// ═══════════════════════════════════════════
+// Brand Content — section text overrides
+// ═══════════════════════════════════════════
+
+export interface BrandContent {
+  labelEn?: string;
+  titleEn?: string;   // Use \n for line breaks, *text* for gold italic
+  bodyEn?: string;    // Use \n\n to separate paragraphs
+}
+
+export const brandContentData: Record<string, BrandContent> = {
+  // --- Homepage sections ---
+  collection: {
+    labelEn: 'The Collection',
+    titleEn: 'Quiet Precision',
+    bodyEn: 'Five signature series — each defined by a distinct design language. Explore the full catalog within each collection.',
+  },
+  catalog: {
+    labelEn: 'Resources',
+    titleEn: 'Download Our Full Product Catalog',
+    bodyEn: 'Complete specifications, dimensions, material details, and MOQ information for wholesale partners.',
+  },
+  craftsmanship: {
+    labelEn: 'The Process',
+    titleEn: 'Uncompromising Craft',
+    bodyEn: 'Every PAULILY piece passes through 47 individual steps — from raw material selection to final inspection. No shortcuts. No compromises.',
+  },
+  heritage: {
+    labelEn: 'Our Heritage',
+    titleEn: 'A Brand Born\nfrom *Conviction*',
+    bodyEn: 'PAULILY was founded in Shanghai with a singular conviction: that Chinese craftsmanship deserves the same global reverence as its European counterparts. We do not imitate — we originate.\n\nOur design philosophy draws from the tension between Eastern aesthetic discipline and Western architectural precision. The result is a product that speaks quietly but carries unmistakable authority.',
+  },
+  wholesale: {
+    labelEn: 'Wholesale Partnership',
+    titleEn: "Let's Build\nSomething *Together*",
+    bodyEn: 'We welcome inquiries from established retailers, distributors, and brand partners worldwide. Our wholesale program offers competitive margins, dedicated account management, and flexible MOQ arrangements.',
+  },
+  // --- Craftsmanship page ---
+  'craftsmanship-hero': {
+    labelEn: 'The Process',
+    titleEn: '47 Steps.\nZero *Compromises*.',
+    bodyEn: 'From raw hide to finished piece — every PAULILY bag is a testament to patience, precision, and the belief that excellence is never accidental.',
+  },
+  'craftsmanship-quality': {
+    labelEn: 'Quality Standards',
+    titleEn: 'What Sets Us *Apart*',
+    bodyEn: '',
+  },
+  // --- About page ---
+  'about-hero': {
+    labelEn: 'Our Heritage',
+    titleEn: 'Born from\n*Conviction*',
+    bodyEn: 'PAULILY was founded in Shanghai with a singular belief: that Chinese craftsmanship deserves the same global reverence as its European counterparts.',
+  },
+  'about-story': {
+    labelEn: 'The Story',
+    titleEn: 'We Do Not Imitate.\nWe *Originate*.',
+    bodyEn: "Shanghai, 2024. A group of artisans and designers who had spent decades studying both Eastern traditional craft and Western contemporary design came together with one question: why shouldn't a Chinese bag brand command the same respect as a Milanese one?\n\nThe answer wasn't marketing. It wasn't storytelling. It was the product itself — every stitch, every edge, every piece of hardware had to be objectively, measurably, undeniably superior. PAULILY was built on that standard.\n\nOur design philosophy draws from the tension between Eastern aesthetic discipline and Western architectural precision. The result is a product that speaks quietly but carries unmistakable authority.",
+  },
+  'about-values': {
+    labelEn: 'Our Values',
+    titleEn: 'Three *Commitments*',
+    bodyEn: '',
+  },
+};
 
 // Wholesale benefits
 export const wholesaleBenefits = [

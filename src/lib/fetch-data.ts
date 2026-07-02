@@ -1,5 +1,5 @@
 import { sanityClient, urlFor } from './sanity';
-import { Product, Series } from './data';
+import { Product, Series, CraftStep, Stat, BrandContent } from './data';
 
 // Sanity document types
 interface SanityProduct {
@@ -241,5 +241,245 @@ export async function fetchSeriesWithOverlay(staticSeries: Series[]): Promise<Se
   } catch (err) {
     console.warn('Sanity series fetch failed, using static data:', err);
     return staticSeries;
+  }
+}
+
+// ═══════════════════════════════════════════
+// Craftsmanship steps fetch with overlay
+// ═══════════════════════════════════════════
+
+interface SanityCraftStep {
+  _id: string;
+  number?: string;
+  titleEn?: string;
+  descriptionEn?: string;
+  image?: any;
+}
+
+export async function fetchCraftStepsWithOverlay(staticSteps: CraftStep[]): Promise<CraftStep[]> {
+  try {
+    const query = `*[_type == "craftStep"] | order(number asc) {
+      _id,
+      number,
+      titleEn,
+      descriptionEn,
+      image
+    }`;
+
+    const results: SanityCraftStep[] = await sanityClient.fetch(query);
+
+    if (!results || results.length === 0) {
+      return staticSteps;
+    }
+
+    const cmsSteps = results.map((doc) => {
+      let imageUrl = '';
+      let rawImage: any = undefined;
+      try {
+        if (doc.image && urlFor(doc.image)) {
+          rawImage = doc.image;
+          imageUrl = urlFor(doc.image).width(600).height(600).fit('crop').quality(90).url() || '';
+        }
+      } catch (imgErr) {
+        console.warn('Craft step image URL build failed for', doc.titleEn, imgErr);
+      }
+
+      return {
+        number: doc.number || '',
+        title: doc.titleEn || '',
+        titleEn: doc.titleEn || '',
+        description: doc.descriptionEn || '',
+        descriptionEn: doc.descriptionEn || '',
+        image: imageUrl,
+        _rawImage: rawImage,
+      };
+    });
+
+    // Overlay by step number, fallback to append
+    const merged = [...staticSteps];
+    for (const cms of cmsSteps) {
+      const matchIndex = merged.findIndex(s => s.number === cms.number);
+      if (matchIndex >= 0) {
+        if (cms.titleEn) merged[matchIndex].titleEn = cms.titleEn;
+        if (cms.titleEn) merged[matchIndex].title = cms.titleEn;
+        if (cms.descriptionEn) merged[matchIndex].descriptionEn = cms.descriptionEn;
+        if (cms.descriptionEn) merged[matchIndex].description = cms.descriptionEn;
+        if (cms.image) merged[matchIndex].image = cms.image;
+        if (cms._rawImage) merged[matchIndex]._rawImage = cms._rawImage;
+      } else {
+        merged.push(cms);
+      }
+    }
+
+    return merged;
+  } catch (err) {
+    console.warn('Sanity craft steps fetch failed, using static data:', err);
+    return staticSteps;
+  }
+}
+
+// ═══════════════════════════════════════════
+// Heritage stats fetch with overlay
+// ═══════════════════════════════════════════
+
+interface SanityStat {
+  _id: string;
+  number?: string;
+  label?: string;
+}
+
+export async function fetchStatsWithOverlay(staticStats: Stat[]): Promise<Stat[]> {
+  try {
+    const query = `*[_type == "stat"] | order(_createdAt asc) {
+      _id,
+      number,
+      label
+    }`;
+
+    const results: SanityStat[] = await sanityClient.fetch(query);
+
+    if (!results || results.length === 0) {
+      return staticStats;
+    }
+
+    const cmsStats = results.map(doc => ({
+      number: doc.number || '',
+      label: doc.label || '',
+      labelZh: '',
+    }));
+
+    // Overlay by label, fallback to append
+    const merged = [...staticStats];
+    for (const cms of cmsStats) {
+      const matchIndex = merged.findIndex(s => s.label === cms.label);
+      if (matchIndex >= 0) {
+        if (cms.number) merged[matchIndex].number = cms.number;
+        if (cms.label) merged[matchIndex].label = cms.label;
+      } else {
+        merged.push(cms);
+      }
+    }
+
+    return merged;
+  } catch (err) {
+    console.warn('Sanity stats fetch failed, using static data:', err);
+    return staticStats;
+  }
+}
+
+// ═══════════════════════════════════════════
+// Site configuration fetch (no static fallback)
+// ═══════════════════════════════════════════
+
+export interface SiteConfig {
+  title: string;
+  description: string;
+  email: string;
+  phone: string;
+  location: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  logo?: any;
+}
+
+interface SanitySiteConfig {
+  title?: string;
+  description?: string;
+  email?: string;
+  phone?: string;
+  location?: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  logo?: any;
+}
+
+export async function fetchSiteConfig(): Promise<SiteConfig | null> {
+  try {
+    const query = `*[_type == "siteConfig"][0] {
+      title,
+      description,
+      email,
+      phone,
+      location,
+      heroTitle,
+      heroSubtitle,
+      logo
+    }`;
+
+    const result: SanitySiteConfig | null = await sanityClient.fetch(query);
+
+    if (!result) return null;
+
+    return {
+      title: result.title || 'PAULILY',
+      description: result.description || '',
+      email: result.email || 'wholesale@paulily.com',
+      phone: result.phone || '+86 21 6888 XXXX',
+      location: result.location || 'Shanghai, China',
+      heroTitle: result.heroTitle,
+      heroSubtitle: result.heroSubtitle,
+      logo: result.logo,
+    };
+  } catch (err) {
+    console.warn('Sanity site config fetch failed:', err);
+    return null;
+  }
+}
+
+// ═══════════════════════════════════════════
+// Brand content fetch with overlay
+// ═══════════════════════════════════════════
+
+interface SanityBrandContent {
+  _id: string;
+  section?: string;
+  labelEn?: string;
+  titleEn?: string;
+  bodyEn?: string;
+}
+
+/**
+ * Fetch brand content from Sanity and MERGE with static fallback.
+ *
+ * Strategy:
+ * 1. Static content ALWAYS serves as baseline (never blank sections)
+ * 2. CMS documents override matching sections by `section` field
+ * 3. If CMS is empty/offline → pure static content shows
+ */
+export async function fetchBrandContent(
+  staticContent: Record<string, BrandContent>
+): Promise<Record<string, BrandContent>> {
+  try {
+    const query = `*[_type == "brandContent"] {
+      _id,
+      section,
+      labelEn,
+      titleEn,
+      bodyEn
+    }`;
+
+    const results: SanityBrandContent[] = await sanityClient.fetch(query);
+
+    if (!results || results.length === 0) {
+      return staticContent;
+    }
+
+    // Clone static as base
+    const merged = { ...staticContent };
+
+    // Overlay: each CMS document overrides the matching section
+    for (const doc of results) {
+      if (!doc.section) continue;
+      merged[doc.section] = {
+        labelEn: doc.labelEn ?? merged[doc.section]?.labelEn,
+        titleEn: doc.titleEn ?? merged[doc.section]?.titleEn,
+        bodyEn: doc.bodyEn ?? merged[doc.section]?.bodyEn,
+      };
+    }
+
+    return merged;
+  } catch (err) {
+    console.warn('Sanity brand content fetch failed, using static data:', err);
+    return staticContent;
   }
 }

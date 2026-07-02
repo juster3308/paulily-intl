@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { products as staticProducts, seriesList as staticSeriesList, craftSteps, heritageStats, wholesaleBenefits } from '@/lib/data';
-import { Series } from '@/lib/data';
-import { fetchProductsWithOverlay, fetchSeriesWithOverlay } from '@/lib/fetch-data';
+import { products as staticProducts, seriesList as staticSeriesList, craftSteps as staticCraftSteps, heritageStats as staticHeritageStats, wholesaleBenefits, brandContentData } from '@/lib/data';
+import { Series, CraftStep, Stat, BrandContent } from '@/lib/data';
+import { fetchProductsWithOverlay, fetchSeriesWithOverlay, fetchCraftStepsWithOverlay, fetchStatsWithOverlay, fetchSiteConfig, fetchBrandContent, SiteConfig } from '@/lib/fetch-data';
 import { urlFor } from '@/lib/sanity';
+import { BrandTitle, splitBodyParagraphs } from '@/components/BrandText';
 
 // Product type with optional raw image
 interface ProductWithImage {
@@ -32,6 +33,10 @@ export default function Home() {
   // Start with static products (instant render), then replace with CMS data
   const [products, setProducts] = useState<ProductWithImage[]>(staticProducts);
   const [seriesData, setSeriesData] = useState<Series[]>(staticSeriesList);
+  const [craftSteps, setCraftSteps] = useState<CraftStep[]>(staticCraftSteps);
+  const [heritageStats, setHeritageStats] = useState<Stat[]>(staticHeritageStats);
+  const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
+  const [brandContent, setBrandContent] = useState<Record<string, BrandContent>>(brandContentData);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -61,6 +66,22 @@ export default function Home() {
       if (merged && merged.length > 0) {
         setSeriesData(merged);
       }
+    });
+    fetchCraftStepsWithOverlay(staticCraftSteps).then((merged) => {
+      if (merged && merged.length > 0) {
+        setCraftSteps(merged);
+      }
+    });
+    fetchStatsWithOverlay(staticHeritageStats).then((merged) => {
+      if (merged && merged.length > 0) {
+        setHeritageStats(merged);
+      }
+    });
+    fetchSiteConfig().then((config) => {
+      if (config) setSiteConfig(config);
+    });
+    fetchBrandContent(brandContentData).then((merged) => {
+      if (merged) setBrandContent(merged);
     });
   }, []);
 
@@ -119,6 +140,27 @@ export default function Home() {
     );
   };
 
+  const renderHeroTitle = (title?: string) => {
+    if (!title) {
+      return (
+        <>
+          Crafted for<br />
+          the <em className="font-accent italic text-p-gold font-light">Discerning</em>
+        </>
+      );
+    }
+    const lines = title.split(/\n|<br\s*\/?>/i);
+    return lines.map((line, i) => (
+      <span key={i}>
+        {i > 0 && <br />}
+        {line}
+      </span>
+    ));
+  };
+
+  // Shorthand for brand content sections
+  const bc = (section: string) => brandContent[section] || {};
+
   return (
     <>
       {/* ══════════ HERO ══════════ */}
@@ -135,12 +177,11 @@ export default function Home() {
           
           <h1 className="font-serif font-normal leading-[1.08] tracking-[-0.03em] text-p-black mb-8
             text-[clamp(3rem,7vw,5.5rem)]">
-            Crafted for<br />
-            the <em className="font-accent italic text-p-gold font-light">Discerning</em>
+            {renderHeroTitle(siteConfig?.heroTitle)}
           </h1>
 
           <p className="font-accent text-[clamp(1.1rem,2vw,1.4rem)] font-light italic text-p-mid-gray leading-[1.7] max-w-[520px] mx-auto mb-12">
-            Where Eastern artistry meets uncompromising quality. Each piece is a dialogue between heritage and modernity — made for those who recognize excellence without explanation.
+            {siteConfig?.heroSubtitle || 'Where Eastern artistry meets uncompromising quality. Each piece is a dialogue between heritage and modernity — made for those who recognize excellence without explanation.'}
           </p>
 
           <div className="flex gap-4 justify-center items-center flex-col md:flex-row">
@@ -153,13 +194,13 @@ export default function Home() {
       {/* ══════════ COLLECTION ══════════ */}
       <section id="collection" className="pt-[clamp(48px,6vw,80px)] px-[clamp(24px,4vw,80px)] pb-[clamp(80px,10vw,140px)]">
         <div ref={addFadeRef} className="text-center max-w-[600px] mx-auto mb-[clamp(48px,6vw,80px)] fade-in">
-          <span className="label block mb-4">The Collection</span>
+          <span className="label block mb-4">{bc('collection').labelEn}</span>
           <div className="divider mx-auto my-4" />
           <h2 className="section-title font-serif font-normal tracking-[-0.02em] text-[clamp(2rem,4vw,3rem)] mb-5">
-            Quiet Precision
+            <BrandTitle title={bc('collection').titleEn || ''} />
           </h2>
           <p className="font-accent text-[1.125rem] font-light italic text-p-mid-gray leading-[1.7]">
-            Five signature series — each defined by a distinct design language. Explore the full catalog within each collection.
+            {bc('collection').bodyEn}
           </p>
         </div>
 
@@ -198,12 +239,12 @@ export default function Home() {
       {/* ══════════ CATALOG DOWNLOAD ══════════ */}
       <section className="bg-p-cream py-[clamp(40px,5vw,64px)] px-[clamp(24px,4vw,80px)] text-center">
         <div ref={addFadeRef} className="fade-in">
-          <span className="label block mb-4">Resources</span>
+          <span className="label block mb-4">{bc('catalog').labelEn}</span>
           <h3 className="font-serif text-[clamp(1.25rem,2.5vw,1.75rem)] font-normal mb-3">
-            Download Our Full Product Catalog
+            {bc('catalog').titleEn}
           </h3>
           <p className="font-accent text-base italic font-light text-p-mid-gray mb-6">
-            Complete specifications, dimensions, material details, and MOQ information for wholesale partners.
+            {bc('catalog').bodyEn}
           </p>
           <button className="btn-primary">Download PDF Catalog</button>
         </div>
@@ -212,13 +253,13 @@ export default function Home() {
       {/* ══════════ CRAFTSMANSHIP ══════════ */}
       <section id="craftsmanship" className="section bg-p-black text-white relative">
         <div ref={addFadeRef} className="text-center max-w-[600px] mx-auto mb-[clamp(48px,6vw,80px)] fade-in">
-          <span className="label block mb-4 text-p-gold tracking-wide">The Process</span>
+          <span className="label block mb-4 text-p-gold tracking-wide">{bc('craftsmanship').labelEn}</span>
           <div className="divider mx-auto my-4" />
           <h2 className="font-serif font-normal tracking-[-0.02em] text-white text-[clamp(2rem,4vw,3rem)] mb-5">
-            Uncompromising Craft
+            <BrandTitle title={bc('craftsmanship').titleEn || ''} />
           </h2>
           <p className="font-accent text-[1.125rem] font-light italic text-white/50 leading-[1.7]">
-            Every PAULILY piece passes through 47 individual steps — from raw material selection to final inspection. No shortcuts. No compromises.
+            {bc('craftsmanship').bodyEn}
           </p>
         </div>
 
@@ -256,18 +297,16 @@ export default function Home() {
 
           {/* Text area */}
           <div ref={addFadeRef} className="fade-in">
-            <span className="label block mb-5">Our Heritage</span>
+            <span className="label block mb-5">{bc('heritage').labelEn}</span>
             <div className="divider-wide mb-5" />
             <h2 className="font-serif text-[clamp(2rem,3.5vw,2.75rem)] font-normal leading-[1.15] mb-6">
-              A Brand Born<br />
-              from <em className="text-p-gold font-accent italic font-light">Conviction</em>
+              <BrandTitle title={bc('heritage').titleEn || ''} />
             </h2>
-            <p className="font-accent text-[1.0625rem] font-light italic text-p-mid-gray leading-[1.8] mb-5">
-              PAULILY was founded in Shanghai with a singular conviction: that Chinese craftsmanship deserves the same global reverence as its European counterparts. We do not imitate — we originate.
-            </p>
-            <p className="font-accent text-[1.0625rem] font-light italic text-p-mid-gray leading-[1.8]">
-              Our design philosophy draws from the tension between Eastern aesthetic discipline and Western architectural precision. The result is a product that speaks quietly but carries unmistakable authority.
-            </p>
+            {splitBodyParagraphs(bc('heritage').bodyEn || '').map((para, i) => (
+              <p key={i} className="font-accent text-[1.0625rem] font-light italic text-p-mid-gray leading-[1.8] mb-5 last:mb-0">
+                {para}
+              </p>
+            ))}
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-10 pt-10 border-t border-p-light-gray">
@@ -291,22 +330,21 @@ export default function Home() {
         <div className="max-w-[1000px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-[clamp(40px,6vw,80px)] items-start">
           {/* Info side */}
           <div ref={addFadeRef} className="fade-in">
-            <span className="label block mb-5">Wholesale Partnership</span>
+            <span className="label block mb-5">{bc('wholesale').labelEn}</span>
             <div className="divider-wide mb-5" />
             <h2 className="font-serif text-[clamp(1.75rem,3vw,2.25rem)] font-normal mb-5">
-              Let&apos;s Build<br />
-              Something <em className="text-p-gold font-accent italic font-light">Together</em>
+              <BrandTitle title={bc('wholesale').titleEn || ''} />
             </h2>
             <p className="font-accent text-base font-light italic text-p-mid-gray leading-[1.8] mb-6">
-              We welcome inquiries from established retailers, distributors, and brand partners worldwide. Our wholesale program offers competitive margins, dedicated account management, and flexible MOQ arrangements.
+              {bc('wholesale').bodyEn}
             </p>
 
             {/* Contact items */}
             <div className="mt-6 space-y-3">
               {[
-                { icon: '✉', text: 'wholesale@paulily.com' },
-                { icon: '☎', text: '+86 21 6888 XXXX' },
-                { icon: '⌂', text: 'Shanghai, China' },
+                { icon: '✉', text: siteConfig?.email || 'wholesale@paulily.com' },
+                { icon: '☎', text: siteConfig?.phone || '+86 21 6888 XXXX' },
+                { icon: '⌂', text: siteConfig?.location || 'Shanghai, China' },
               ].map((item) => (
                 <div key={item.icon} className="flex items-center gap-3 font-sans text-[0.8125rem] text-p-dark-gray">
                   <div className="w-8 h-8 border border-p-light-gray flex items-center justify-center text-xs text-p-gold">
